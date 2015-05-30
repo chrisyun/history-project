@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Question Mappper -->
+<mapper namespace="MindsMapper">
+	<insert id="insert" parameterType="com.talkweb.ncfw.entity.Minds">
+		insert into t_flow_minds (
+		   		mid
+		   <if test="minds != null and minds != ''">
+		   		,minds
+		   </if>
+		   <if test="pid != null and pid != ''">
+		   		,pid
+		   </if>
+		   <if test="tableid != null and tableid != ''">
+		   		,tableid
+		   </if>
+		   <if test="creattime != null and creattime != ''">
+		   		,creattime
+		   </if>
+		   <if test="activityname != null and activityname != ''">
+		   		,activityname
+		   </if>
+		) values (
+		  		#{mid}
+		  <if test="minds != null and minds != ''">
+		   		,#{minds}
+		   </if>
+		   <if test="pid != null and pid != ''">
+		   		,#{pid}
+		   </if>
+		   <if test="tableid != null and tableid != ''">
+		   		,#{tableid}
+		   </if>
+		   <if test="creattime != null and creattime != ''">
+		   		,#{creattime}
+		   </if>
+		   <if test="activityname != null and activityname != ''">
+		   		,#{activityname}
+		   </if>
+		   )
+	</insert>
+	
+	<select id="queryMindList" parameterType="hashmap"
+		resultType="com.talkweb.ncfw.entity.Minds">
+		select minds,activityname
+		  from t_flow_minds
+		  where pid = #{pid} and  tableid = #{tableid} order by creattime asc
+	</select>
+	
+	
+</mapper>

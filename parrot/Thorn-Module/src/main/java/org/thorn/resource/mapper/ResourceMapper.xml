@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ResourceMapper">
+	
+	<cache-ref namespace="DictMapper" />
+
+	<resultMap id="BaseResultMap" type="org.thorn.resource.entity.Resource">
+		<id column="SOURCECODE" property="sourceCode" jdbcType="VARCHAR" />
+		<result column="SOURCENAME" property="sourceName" jdbcType="VARCHAR" />
+		<result column="SOURCEURL" property="sourceUrl" jdbcType="VARCHAR" />
+		<result column="ISLEAF" property="isleaf" jdbcType="VARCHAR" />
+		<result column="ISSHOW" property="isShow" jdbcType="VARCHAR" />
+		<result column="PARENTSOURCE" property="parentSource" jdbcType="VARCHAR" />
+		<result column="SORTNUM" property="sortNum" jdbcType="DECIMAL" />
+		<result column="ICONSCLS" property="iconsCls" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		s.SOURCECODE, s.SOURCENAME, s.SOURCEURL, s.ISLEAF,
+		s.ISSHOW, s.PARENTSOURCE,s.SORTNUM, s.ICONSCLS
+  	</sql>
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="sourceCode != null and sourceCode != ''">
+				AND s.SOURCECODE = #{sourceCode,jdbcType=VARCHAR}
+      		</if>
+			<if test="sourceName != null and sourceName != ''">
+				AND s.SOURCENAME like CONCAT('%',#{sourceName,jdbcType=VARCHAR},'%')
+     		 </if>
+			<if test="isleaf != null and isleaf != ''">
+				AND s.ISLEAF = #{isleaf,jdbcType=VARCHAR}
+     	 	</if>
+			<if test="isShow != null and isShow != ''">
+				AND s.ISSHOW = #{isShow,jdbcType=VARCHAR}
+      		</if>
+			<if test="parentSource != null and parentSource != ''">
+				AND s.PARENTSOURCE = #{parentSource,jdbcType=VARCHAR}
+      		</if>
+		</where>
+	</sql>
+
+	<insert id="insert" parameterType="org.thorn.resource.entity.Resource">
+		insert into T_SYS_RESOURCE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="sourceCode != null and sourceCode != ''">SOURCECODE,</if>
+			<if test="sourceName != null and sourceName != ''">SOURCENAME,</if>
+			<if test="sourceUrl != null and sourceUrl != ''">SOURCEURL,</if>
+			<if test="isleaf != null and isleaf != ''">ISLEAF,</if>
+			<if test="isShow != null and isShow != ''">ISSHOW,</if>
+			<if test="parentSource != null and parentSource != ''">PARENTSOURCE,</if>
+			<if test="sortNum != null">SORTNUM,</if>
+			<if test="iconsCls != null and iconsCls != ''">ICONSCLS,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="sourceCode != null and sourceCode != ''">#{sourceCode,jdbcType=VARCHAR},</if>
+			<if test="sourceName != null and sourceName != ''">#{sourceName,jdbcType=VARCHAR},</if>
+			<if test="sourceUrl != null and sourceUrl != ''">#{sourceUrl,jdbcType=VARCHAR},</if>
+			<if test="isleaf != null and isleaf != ''">#{isleaf,jdbcType=VARCHAR},</if>
+			<if test="isShow != null and isShow != ''">#{isShow,jdbcType=VARCHAR},</if>
+			<if test="parentSource != null and parentSource != ''">#{parentSource,jdbcType=VARCHAR},</if>
+			<if test="sortNum != null">#{sortNum,jdbcType=DECIMAL},</if>
+			<if test="iconsCls != null and iconsCls != ''">#{iconsCls,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="org.thorn.resource.entity.Resource">
+		update T_SYS_RESOURCE
+		<set>
+			<if test="sourceCode != null and sourceCode != ''">SOURCECODE = #{sourceCode,jdbcType=VARCHAR},</if>
+			<if test="sortNum != null">SORTNUM = #{sortNum,jdbcType=DECIMAL},</if>
+			<if test="sourceName != null and sourceName != ''">SOURCENAME = #{sourceName,jdbcType=VARCHAR},</if>
+			<if test="sourceUrl != null and sourceUrl != ''">SOURCEURL = #{sourceUrl,jdbcType=VARCHAR},</if>
+			<if test="isleaf != null and isleaf != ''">ISLEAF = #{isleaf,jdbcType=VARCHAR},</if>
+			<if test="isShow != null and isShow != ''">ISSHOW = #{isShow,jdbcType=VARCHAR},</if>
+			<if test="parentSource != null and parentSource != ''">PARENTSOURCE = #{parentSource,jdbcType=VARCHAR},</if>
+			<if test="iconsCls != null and iconsCls != ''">ICONSCLS = #{iconsCls,jdbcType=VARCHAR},</if>
+		</set>
+		where SOURCECODE = #{sourceCode,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="delete">
+		delete from T_SYS_RESOURCE where SOURCECODE in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+		
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="hashmap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_RESOURCE s
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	
+	<select id="selectPageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*) from T_SYS_RESOURCE s
+		<include refid="Where_Clause" />
+	</select>
+
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<!-- RoleMenu Mappper -->
+	<mapper namespace="RoleMenuMapper">
+		<!-- query User Condition -->
+		<sql id="conditionSql">
+			<where>
+				<if test=" roleid != null and roleid != '' ">
+					AND EXISTS (
+						select 1 from ac_role_menu_ref
+						where ac_role_menu_ref.menuid = ac_menu.menuid and ac_role_menu_ref.roleid = #{roleid}
+					)
+				</if>
+				<if test=" menuid != null and menuid != '' ">
+					AND menuid = #{menuid}
+				</if>
+				<if test="roleidinArray != null">
+					AND EXISTS (
+						select 1 from ac_role_menu_ref
+						where ac_role_menu_ref.menuid = ac_menu.menuid and ac_role_menu_ref.roleid in 
+						<foreach item="roleid" index="index" collection="roleidinArray" open="(" separator="," close=")">
+							#{roleid}
+						</foreach>
+					)
+				</if>
+			</where>
+		</sql>
+		
+		<!-- query Menu -->
+		<select id="queryMenu" parameterType="hashmap" resultType="com.talkweb.ncframework.modules.rights.menu.entity.SystemMenu">
+			SELECT 
+				ac_menu.MENUID, MENUNAME, MENULABELNAME, MENUCODE, MENUENTRY, 
+				ISLEAF, OPENMODE, DISPLAYORDER, ISDISPLAY, PARENTMENUID
+			FROM ac_menu
+			<include refid="RoleMenuMapper.conditionSql"/>
+			<include refid="CommonMapper.sortInfo"/>
+		</select>
+		
+		<!-- query Menu support pagination -->
+		<select id="queryMenuSupportPagination" parameterType="hashmap" resultType="com.talkweb.ncframework.modules.rights.menu.entity.SystemMenu">
+			<include refid="CommonMapper.pagingStart"/>
+			SELECT 
+				ac_menu.MENUID, MENUNAME, MENULABELNAME, MENUCODE, MENUENTRY, 
+				ISLEAF, OPENMODE, DISPLAYORDER, ISDISPLAY, PARENTMENUID
+			FROM ac_menu
+			<include refid="RoleMenuMapper.conditionSql"/>
+			<include refid="CommonMapper.sortInfo"/>
+			<include refid="CommonMapper.pagingEnd"/>
+		</select>
+		
+		<!-- get User Count -->
+		<select id="getMenuCount" parameterType="hashmap" resultType="Long">
+			SELECT count(*) FROM ac_menu
+			<include refid="RoleMenuMapper.conditionSql"/>
+		</select>
+		
+		<insert id="insert">
+			INSERT INTO ac_role_menu_ref (
+				menuid, roleid
+			) VALUES (
+				#{menuid}, #{roleid}
+			)
+		</insert>
+		
+		<delete id="deleteByRole">
+			delete from ac_role_menu_ref where roleid = #{roleid}
+		</delete>
+	</mapper>

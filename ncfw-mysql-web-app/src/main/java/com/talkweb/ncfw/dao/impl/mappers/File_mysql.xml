@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<!-- User Mappper -->
+	<mapper namespace="FileMapper">
+		
+		<sql id="columnSql">
+			attid,attname,atttype,attpath,uploader,tableid,pid,uploadType,busatttype
+		</sql>
+		
+		<sql id="conditionSql">
+			<where>
+				<if test=" attid != null and attid != '' ">
+					AND attid = #{attid}
+				</if>
+				<if test=" pid != null and pid != '' ">
+					AND pid = #{pid}
+				</if>
+				<if test="tableid != null and tableid != ''">
+					AND tableid = #{tableid}
+				</if>
+				<if test="busatttype != null and busatttype != ''">
+					AND busatttype = #{busatttype}
+				</if>
+			</where>
+		</sql>
+		
+		<select id="query" parameterType="hashmap" resultType="com.talkweb.ncfw.entity.CommonFile">
+			select
+			<include refid="FileMapper.columnSql"/>
+		  	from t_common_file
+		  	<include refid="FileMapper.conditionSql"/>
+		</select>
+		
+		<select id="queryByAttid" parameterType="string" resultType="com.talkweb.ncfw.entity.CommonFile">
+			select
+			<include refid="FileMapper.columnSql"/>
+		  	from t_common_file where attid = #{attid}
+		</select>
+		
+		<insert id="insert">
+			INSERT INTO t_common_file (
+			<if test="attid != null and attid != ''">
+				attid
+			</if>
+			<if test="attname != null and attname != ''">
+				,attname
+			</if>
+			<if test="atttype != null and atttype != ''">
+				,atttype
+			</if>
+			<if test="attpath != null and attpath != ''">
+				,attpath
+			</if>
+			<if test="uploader != null and uploader != ''">
+				,uploader
+			</if>
+			<if test="tableid != null and tableid != ''">
+				,tableid
+			</if>
+			<if test="uploadType != null and uploadType != ''">
+				,uploadType
+			</if>
+			<if test="pid != null and pid != ''">
+				,pid
+			</if>
+			<if test="uploadtime != null and uploadtime != ''">
+				,uploadtime
+			</if>
+			<if test="busatttype != null and busatttype != ''">
+				,busatttype
+			</if>
+		) VALUES (
+			<if test="attid != null and attid != ''">
+				#{attid}
+			</if>
+			<if test="attname != null and attname != ''">
+				,#{attname}
+			</if>
+			<if test="atttype != null and atttype != ''">
+				,#{atttype}
+			</if>
+			<if test="attpath != null and attpath != ''">
+				,#{attpath}
+			</if>
+			<if test="uploader != null and uploader != ''">
+				,#{uploader}
+			</if>
+			<if test="tableid != null and tableid != ''">
+				,#{tableid}
+			</if>
+			<if test="uploadType != null and uploadType != ''">
+				,#{uploadType}
+			</if>
+			<if test="pid != null and pid != ''">
+				,#{pid}
+			</if>
+			<if test="uploadtime != null and uploadtime != ''">
+				,#{uploadtime}
+			</if>
+			<if test="busatttype != null and busatttype != ''">
+				,#{busatttype}
+			</if>
+		)
+	</insert>
+	
+	<delete id="delete">
+		delete from t_common_file
+		<include refid="FileMapper.conditionSql"/>
+	</delete>
+	
+		
+	<update id="update">
+		update t_common_file 
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="pid != null and pid != ''">
+				pid = #{pid},
+			</if>
+			<if test="tableid != null and tableid != ''">
+				tableid = #{tableid},
+			</if>
+	    </trim>
+		WHERE attid in (${attId})
+	</update>
+	
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Question Mappper -->
+<mapper namespace="MedProjectMapper">
+	<insert id="insert" parameterType="com.talkweb.ncfw.entity.MedProject">
+		insert into t_med_project (
+		   		mpid
+		   <if test="pname != null and pname != ''">
+		   		,pname
+		   </if>
+		   <if test="pmanager != null and pmanager != ''">
+		   		,pmanager
+		   </if>
+		   <if test="tel != null and tel != ''">
+		   		,tel
+		   </if>
+		   <if test="cdorg != null and cdorg != ''">
+		   		,cdorg
+		   </if>
+		   <if test="sborg != null and sborg != ''">
+		   		,sborg
+		   </if>
+		   <if test="sbdate != null and sbdate != ''">
+		   		,sbdate
+		   </if>
+		   <if test="pid != null and pid != ''">
+		   		,pid
+		   </if>
+		   <if test="creattime != null and creattime != ''">
+		   		,creattime
+		   </if>
+		   <if test="issp != null and issp != ''">
+		   		,issp
+		   </if>
+		) values (
+		  		#{mpid}
+		  <if test="pname != null and pname != ''">
+		   		,#{pname}
+		   </if>
+		   <if test="pmanager != null and pmanager != ''">
+		   		,#{pmanager}
+		   </if>
+		   <if test="tel != null and tel != ''">
+		   		,#{tel}
+		   </if>
+		   <if test="cdorg != null and cdorg != ''">
+		   		,#{cdorg}
+		   </if>
+		   <if test="sborg != null and sborg != ''">
+		   		,#{sborg}
+		   </if>
+		   <if test="sbdate != null and sbdate != ''">
+		   		,#{sbdate}
+		   </if>
+		   <if test="pid != null and pid != ''">
+		   		,#{pid}
+		   </if>
+		   <if test="creattime != null and creattime != ''">
+		   		,#{creattime}
+		   </if>
+		   <if test="issp != null and issp != ''">
+		   		,#{issp}
+		   </if>
+		   )
+	</insert>
+	
+	<update id="update" parameterType="com.talkweb.ncfw.entity.MedProject">
+		update t_med_project 
+		<trim prefix="SET" suffixOverrides=",">
+		   <if test="pname != null and pname != ''">
+		   		pname = #{pname},
+		   </if>
+		   <if test="pmanager != null and pmanager != ''">
+		   		pmanager = #{pmanager},
+		   </if>
+		   <if test="tel != null and tel != ''">
+		   		tel = #{tel},
+		   </if>
+		   <if test="cdorg != null and cdorg != ''">
+		   		cdorg = #{cdorg},
+		   </if>
+		   <if test="sborg != null and sborg != ''">
+		   		sborg = #{sborg},
+		   </if>
+		   <if test="sbdate != null and sbdate != ''">
+		   		sbdate = #{sbdate},
+		   </if>
+		   <if test="issp != null and issp != ''">
+		   		issp = #{issp},
+		   </if>
+		</trim>
+		where mpid = #{mpid}
+	</update>
+	
+	<select id="selectMedProjectById" parameterType="string"
+	 resultType="com.talkweb.ncfw.entity.MedProject">
+		select t.PID  ,
+			t.PNAME  ,
+			t.TEL ,
+			t.CDORG  ,
+			t.SBORG  ,
+			t.SBDATE ,
+			t.pmanager ,
+			t.mpid,
+			t.issp
+		from t_med_project t where MPID = #{mpid}
+	</select>
+	
+	<select id="selectIdsBypid" parameterType="string" resultType="com.talkweb.ncfw.entity.MedProject">
+		select MPID,issp from t_med_project where pid = #{pid} order by creattime desc
+	</select>
+	
+</mapper>

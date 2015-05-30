@@ -1,0 +1,250 @@
+/**让disabled的控件字体颜色不变*/
+.x-item-disabled {
+	cursor: default;
+	opacity: 0.8;
+	color: black;
+}
+
+/** 修正IE9下datefield控件问题*/
+.x-date-menu {
+    width: 175px !important;
+}
+
+/** 让按钮字体大小不随鼠标滑动变化*/
+.x-btn-text-icon .x-btn-icon-small-left .x-btn-text{
+    background-position: 0 center;/*默认*/
+    background-repeat: no-repeat;/*默认*/
+    padding-left:18px;/*默认*/
+    height:16px;/*默认*/
+    font-size:13px;/*字体大小设置*/
+}
+.ux-mselect{
+    overflow:auto;
+    background:white;
+    position:relative; /* for calculating scroll offsets */
+    zoom:1;
+    overflow:auto;	
+}
+.ux-mselect-item{
+    font:normal 12px tahoma, arial, helvetica, sans-serif;
+    padding:2px;
+    border:1px solid #fff;
+    white-space: nowrap;
+    cursor:pointer;
+}
+.ux-mselect-selected{
+	border:1px dotted #a3bae9 !important;
+    background:#DFE8F6;
+    cursor:pointer;
+}
+
+.x-view-drag-insert-above { 
+    border-top:1px dotted #3366cc; 
+} 
+.x-view-drag-insert-below { 
+    border-bottom:1px dotted #3366cc; 
+} 
+
+/*
+ * FileUploadField component styles
+ */
+.x-form-file-wrap {
+    position: relative;
+    height: 22px;
+}
+.x-form-file-wrap .x-form-file {
+	position: absolute;
+	right: 0;
+	-moz-opacity: 0;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 2;
+    height: 22px;
+}
+.x-form-file-wrap .x-form-file-btn {
+	position: absolute;
+	right: 0;
+	z-index: 1;
+}
+.x-form-file-wrap .x-form-file-text {
+    position: absolute;
+    left: 0;
+    z-index: 3;
+    color: #777;
+}
+
+.upload-icon {
+    background: url('images/local/icons/image_add.png') no-repeat 0 0 !important;
+}
+
+/**********************common style**********************/
+.msg .x-box-mc {
+	font-size: 14px;
+}
+
+#msg-div {
+	position: absolute;
+	left: 35%;
+	top: 10px;
+	width: 250px;
+	z-index: 20000;
+}
+
+.uploadArea {
+	float: left;
+	padding: 4px 20px 4px 20px;
+    font-size: 13px;
+	width: 300px;
+}
+
+.required {
+	font: 0.8em Verdana !important;
+	color: #f68622;
+	margin-top: 120px;
+}
+
+.tips {
+	font: 1.0em Verdana !important;
+	color: #f68622;
+	padding : 10px 10px 0 10px;
+}
+
+/**********************ico style**********************/
+/**btn ico*/
+.silk-add {
+	background-image: url(images/local/icons/add.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-delete {
+	background-image: url(images/local/icons/delete.gif) !important;
+	background-repeat: no-repeat;
+}
+.silk-edit {
+	background-image: url(images/local/icons/edit.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-save {
+	background-image: url(images/local/icons/save.gif) !important;
+	background-repeat: no-repeat;
+}
+.silk-tick {
+	background-image: url(images/local/icons/tick.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-cross {
+	background-image: url(images/local/icons/cross.gif) !important;
+	background-repeat: no-repeat;
+}
+.silk-accept {
+	background-image: url(images/local/icons/accept.png) !important;
+	background-repeat: no-repeat;
+}
+.slik-close {
+	background-image: url(images/local/icons/close.png) !important;
+	background-repeat: no-repeat;
+}
+.slik-search {
+	background-image: url(images/local/icons/search.png) !important;
+	background-repeat: no-repeat;
+}
+.slik-refresh {
+	background-image: url(images/local/icons/refresh.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-pdf {
+	background-image: url(images/local/icons/pdf.gif) !important;
+	background-repeat: no-repeat;
+}
+.silk-word {
+	background-image: url(images/local/icons/page_word.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-excel {
+	background-image: url(images/local/icons/page_excel.png) !important;
+	background-repeat: no-repeat;
+}
+
+/**table ico*/
+.silk-nav {
+	background-image: url(images/local/icons/folder_go.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-settings {
+	background-image: url(images/local/icons/folder_wrench.png) !important;
+	background-repeat: no-repeat;
+}
+
+.silk-rss {
+	background-image: url(images/local/icons/rss_go.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-table-refresh {
+	background-image: url(images/local/icons/table_refresh.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-application-view-list {
+	background-image: url(images/local/icons/application_view_list.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-grid {
+	background-image: url(images/local/icons/grid.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-home {
+	background-image: url(images/local/icons/application_home.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-app-go {
+	background-image: url(images/local/icons/application_go.png) !important;
+	background-repeat: no-repeat;
+}
+.silk-logout {
+	background-image: url(images/local/icons/logout.gif) !important;
+	background-repeat: no-repeat;
+}
+
+/**tree ico*/
+.tree-user {
+	background-image: url(images/local/icons/user.png) !important;
+	background-repeat: no-repeat;
+}
+.tree-org {
+	background-image: url(images/local/icons/org.png) !important;
+	background-repeat: no-repeat;
+}
+.tree-dd {
+	background-image: url(images/local/icons/dict.gif) !important;
+	background-repeat: no-repeat;
+}
+.tree-pwd {
+	background-image: url(images/local/icons/user_edit.png) !important;
+	background-repeat: no-repeat;
+}
+.tree-role {
+	background-image: url(images/local/icons/icon-service.gif) !important;
+	background-repeat: no-repeat;
+}
+.tree-source {
+	background-image: url(images/local/icons/resources.gif) !important;
+	background-repeat: no-repeat;
+}
+.tree-auth {
+	background-image: url(images/local/icons/user_comment.png) !important;
+	background-repeat: no-repeat;
+}
+.tree-appLog {
+	background-image: url(images/local/icons/accessmode-open.gif) !important;
+	background-repeat: no-repeat;
+}
+.tree-sysLog {
+	background-image: url(images/local/icons/accessmode.gif) !important;
+	background-repeat: no-repeat;
+}
+.tree-config {
+	background-image: url(images/local/icons/plugin.gif) !important;
+	background-repeat: no-repeat;
+}
+.tree-att {
+	background-image: url(images/local/icons/book.png) !important;
+	background-repeat: no-repeat;
+}

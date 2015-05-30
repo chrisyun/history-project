@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<!-- User Mappper -->
+	<mapper namespace="UserMapper">
+		<!-- query User Condition -->
+		<sql id="conditionSql">
+			<where>
+				t_prizeorg.orgid = citynumber
+				<if test=" userid != null and userid != '' ">
+					AND userid = #{userid}
+				</if>
+				<if test=" useridLike != null and useridLike != '' ">
+					AND userid LIKE CONCAT('%', #{useridLike}, '%')
+				</if>
+				<if test=" roleid != null and roleid != '' ">
+					AND roleid = #{roleid}
+				</if>
+				<if test=" surname != null and surname != '' ">
+					AND surname LIKE CONCAT('%', #{surname}, '%')
+				</if>
+				<if test=" givenname != null and givenname != '' ">
+					AND givenname LIKE CONCAT('%', #{givenname}, '%')
+				</if>
+				<if test=" username != null and username != '' ">
+					AND username LIKE CONCAT('%', #{username}, '%')
+				</if>
+				<if test=" usernameLike != null and usernameLike != '' ">
+					AND username LIKE CONCAT('%', #{usernameLike}, '%')
+				</if>
+				<if test=" displayname != null and displayname != '' ">
+					AND displayname LIKE CONCAT('%', #{displayname}, '%')
+				</if>
+				<if test=" gender != null and gender != '' ">
+					AND gender = #{gender}
+				</if>
+				<if test=" mail != null and mail != '' ">
+					AND mail = #{mail}
+				</if>
+				<if test=" mailLike != null and mailLike != '' ">
+					AND mail LIKE CONCAT('%', #{mailLike}, '%')
+				</if>
+				<if test=" mobileLike != null and mobileLike != '' ">
+					AND mobile LIKE CONCAT('%', #{mobileLike}, '%')
+				</if>
+				<if test=" mobile != null and mobile != '' ">
+					AND mobile = #{mobile}
+				</if>
+				<if test=" userpwd != null and userpwd != '' ">
+					AND userpwd = #{userpwd}
+				</if>
+				<if test=" status != null and status != '' ">
+					AND status = #{status}
+				</if>
+				<if test=" usertype != null and usertype != '' ">
+					AND usertype = #{usertype}
+				</if>
+				<if test=" provincenumber != null and provincenumber != '' ">
+					AND t_prizeuser.provincenumber = #{provincenumber}
+				</if>
+				<if test=" citynumber != null and citynumber != '' ">
+					AND citynumber = #{citynumber}
+				</if>
+				<if test=" streetnumber != null and streetnumber != '' ">
+					AND streetnumber LIKE '%' || #{streetnumber} || '%'
+				</if>
+				<if test=" qqnumber != null and qqnumber != '' ">
+					AND qqnumber = #{qqnumber}
+				</if>
+				<if test=" msnnumber != null and msnnumber != '' ">
+					AND msnnumber = #{msnnumber}
+				</if>
+				<if test=" useridInArray != null">
+					AND userid IN
+					<foreach item="userid" collection="useridInArray" open="(" separator="," close=")" >
+						#{userid}
+					</foreach>
+				</if>
+				<if test=" usertypeInArray != null">
+					AND usertype IN
+					<foreach item="usertype" collection="usertypeInArray" open="(" separator="," close=")" >
+						#{usertype}
+					</foreach>
+				</if>
+				<if test=" usertypeOutArray != null">
+					AND ( 
+						usertype IS NULL OR 
+						usertype NOT IN
+						<foreach item="usertype" collection="usertypeOutArray" open="(" separator="," close=")" >
+							#{usertype}
+						</foreach>
+					)
+				</if>
+				<if test=" roleInArray != null">
+					AND roleid IN
+					<foreach item="roleid" collection="roleInArray" open="(" separator="," close=")" >
+						#{roleid}
+					</foreach>
+				</if>
+				<if test=" roleOutArray != null">
+					AND roleid NOT IN
+					<foreach item="roleid" collection="roleOutArray" open="(" separator="," close=")" >
+						#{roleid}
+					</foreach>
+				</if>
+				
+				<if test="createDateBegin != null and createDateBegin != ''">
+					AND TO_DAYS(createtime) &gt;= TO_DAYS(#{createDateBegin})
+				</if>
+				<if test="createDateEnd != null and createDateEnd != ''">
+					AND TO_DAYS(createtime) &lt;= TO_DAYS(#{createDateEnd})
+				</if>
+				<if test=" bakcolumn1 != null and bakcolumn1 != '' ">
+					AND bakcolumn1 = #{bakcolumn1}
+				</if>
+				<if test=" bakcolumn2 != null and bakcolumn2 != '' ">
+					AND bakcolumn2 = #{bakcolumn2}
+				</if>
+				<if test=" bakcolumn3 != null and bakcolumn3 != '' ">
+					AND bakcolumn3 = #{bakcolumn3}
+				</if>
+			</where>
+		</sql>
+		
+		<sql id="columnSql">
+			userid,roleid,surname,givenname,username,displayname,
+		    gender,age,birthday,photo,mail,mobile,officetel,telephonenumber,
+		    status,usertype,t_prizeuser.provincenumber,citynumber,t_prizeorg.orgname as cityname,
+		    streetnumber,postalcode,identitynumber,qqnumber,msnnumber,ordernumber,
+		    userpwd,date_format(createtime, '%Y-%m-%d %T') createtime,
+		    date_format(lastactivetime, '%Y-%m-%d %T') lastactivetime,
+		    remark,bakcolumn1,bakcolumn2,bakcolumn3
+		</sql>
+		
+		<!-- query User -->
+		<select id="query" parameterType="hashmap" resultType="com.talkweb.ncfw.entity.User">
+			select 
+			<include refid="UserMapper.columnSql"/>
+		  	from t_prizeuser,t_prizeorg
+			<include refid="UserMapper.conditionSql"/>
+		</select>
+		
+		<!-- query User support pagination -->
+		<select id="querySupportPagination" parameterType="hashmap" resultType="com.talkweb.ncfw.entity.User">
+			<include refid="CommonMapper.pagingStart"/>
+			select
+			<include refid="UserMapper.columnSql"/>
+		  	from t_prizeuser,t_prizeorg
+			<include refid="UserMapper.conditionSql"/>
+			<include refid="CommonMapper.sortInfo"/>
+			<include refid="CommonMapper.pagingEnd"/>
+		</select>
+		
+		<!-- get User Count -->
+		<select id="getCount" parameterType="hashmap" resultType="Long">
+			SELECT 
+				count(*)
+			FROM t_prizeuser,t_prizeorg
+			<include refid="UserMapper.conditionSql"/>
+		</select>
+		
+		<sql id="uniqueConditionSql">
+			<trim prefixOverrides="or" prefix=" where (" suffix=")">
+				<if test=" username != null and username != '' ">
+					username = #{username}
+				</if>
+				<if test=" userid != null and userid != '' ">
+					userid = #{userid}
+				</if>
+				<if test=" displayname != null and displayname != '' ">
+					or displayname = #{displayname}
+				</if>
+				<if test=" mail != null and mail != '' ">
+					or mail = #{mail}
+				</if>
+				<if test=" mobile != null and mobile != '' ">
+					or mobile = #{mobile}
+				</if>
+			</trim>
+		</sql>
+		
+		<select id="getUseridForUnique" parameterType="hashmap" resultType="string">
+			select userid from t_prizeuser 
+			<include refid="UserMapper.uniqueConditionSql"/>
+		</select>
+		
+		<select id="getCountForUnique" parameterType="hashmap" resultType="Long">
+			select count(*) from t_prizeuser 
+			<include refid="UserMapper.uniqueConditionSql"/>
+		</select>
+		
+		<insert id="insert">
+			INSERT INTO t_prizeuser (
+			userid, createtime
+			<if test="roleid != null and roleid != ''">
+				,roleid
+			</if>
+			<if test="surname != null and surname != ''">
+				,surname
+			</if>
+			<if test="givenname != null and givenname != ''">
+				,givenname
+			</if>
+			<if test="username != null and username != ''">
+				,username
+			</if>
+			<if test="displayname != null and displayname != ''">
+				,displayname
+			</if>
+			<if test="gender != null and gender != ''">
+				,gender
+			</if>
+			<if test="age != null and age != ''">
+				,age
+			</if>
+			<if test="birthday != null and birthday != ''">
+				,birthday
+			</if>
+			<if test="photo != null and photo != ''">
+				,photo
+			</if>
+			<if test="mail != null and mail != ''">
+				,mail
+			</if>
+			<if test="mobile != null and mobile != ''">
+				,mobile
+			</if>
+			<if test="officetel != null and officetel != ''">
+				,officetel
+			</if>
+			<if test="telephonenumber != null and telephonenumber != ''">
+				,telephonenumber
+			</if>
+			<if test="status != null and status != ''">
+				,status
+			</if>
+			<if test="usertype != null and usertype != ''">
+				,usertype
+			</if>
+			<if test="provincenumber != null and provincenumber != ''">
+				,provincenumber
+			</if>
+			<if test="citynumber != null and citynumber != ''">
+				,citynumber
+			</if>
+			<if test="streetnumber != null and streetnumber != ''">
+				,streetnumber
+			</if>
+			<if test="postalcode != null and postalcode != ''">
+				,postalcode
+			</if>
+			<if test="identitynumber != null and identitynumber != ''">
+				,identitynumber
+			</if>
+			<if test="qqnumber != null and qqnumber != ''">
+				,qqnumber
+			</if>
+			<if test="msnnumber != null and msnnumber != ''">
+				,msnnumber
+			</if>
+			<if test="ordernumber != null and ordernumber != ''">
+				,ordernumber
+			</if>
+			<if test="userpwd != null and userpwd != ''">
+				,userpwd
+			</if>
+			<if test="lastactivetime != null and lastactivetime != ''">
+				,lastactivetime
+			</if>
+			<if test="remark != null and remark != ''">
+				,remark
+			</if>
+			<if test="bakcolumn1 != null and bakcolumn1 != ''">
+				,bakcolumn1
+			</if>
+			<if test="bakcolumn2 != null and bakcolumn2 != ''">
+				,bakcolumn2
+			</if>
+			<if test="bakcolumn3 != null and bakcolumn3 != ''">
+				,bakcolumn3
+			</if>
+		
+		) VALUES (
+			#{userid}, now()
+			<if test="roleid != null and roleid != ''">
+				,#{roleid}
+			</if>
+			<if test="surname != null and surname != ''">
+				,#{surname}
+			</if>
+			<if test="givenname != null and givenname != ''">
+				,#{givenname}
+			</if>
+			<if test="username != null and username != ''">
+				,#{username}
+			</if>
+			<if test="displayname != null and displayname != ''">
+				,#{displayname}
+			</if>
+			<if test="gender != null and gender != ''">
+				,#{gender}
+			</if>
+			<if test="age != null and age != ''">
+				,#{age}
+			</if>
+			<if test="birthday != null and birthday != ''">
+				,#{birthday}
+			</if>
+			<if test="photo != null and photo != ''">
+				,#{photo}
+			</if>
+			<if test="mail != null and mail != ''">
+				,#{mail}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				,#{mobile}
+			</if>
+			<if test="officetel != null and officetel != ''">
+				,#{officetel}
+			</if>
+			<if test="telephonenumber != null and telephonenumber != ''">
+				,#{telephonenumber}
+			</if>
+			<if test="status != null and status != ''">
+				,#{status}
+			</if>
+			<if test="usertype != null and usertype != ''">
+				,#{usertype}
+			</if>
+			<if test="provincenumber != null and provincenumber != ''">
+				,#{provincenumber}
+			</if>
+			<if test="citynumber != null and citynumber != ''">
+				,#{citynumber}
+			</if>
+			<if test="streetnumber != null and streetnumber != ''">
+				,#{streetnumber}
+			</if>
+			<if test="postalcode != null and postalcode != ''">
+				,#{postalcode}
+			</if>
+			<if test="identitynumber != null and identitynumber != ''">
+				,#{identitynumber}
+			</if>
+			<if test="qqnumber != null and qqnumber != ''">
+				,#{qqnumber}
+			</if>
+			<if test="msnnumber != null and msnnumber != ''">
+				,#{msnnumber}
+			</if>
+			<if test="ordernumber != null and ordernumber != ''">
+				,#{ordernumber}
+			</if>
+			<if test="userpwd != null and userpwd != ''">
+				,#{userpwd}
+			</if>
+			<if test="lastactivetime != null and lastactivetime != ''">
+				,#{lastactivetime}
+			</if>
+			<if test="remark != null and remark != ''">
+				,#{remark}
+			</if>
+			<if test="bakcolumn1 != null and bakcolumn1 != ''">
+				,#{bakcolumn1}
+			</if>
+			<if test="bakcolumn2 != null and bakcolumn2 != ''">
+				,#{bakcolumn2}
+			</if>
+			<if test="bakcolumn3 != null and bakcolumn3 != ''">
+				,#{bakcolumn3}
+			</if>
+		)
+	</insert>
+	
+	<insert id="insertByBlackUseridArray">
+		insert into t_prizeuser (
+			userid, roleid, surname, givenname, username, displayname, 
+			gender, 
+			age, 
+			birthday, 
+			photo, 
+			mail, 
+			mobile, 
+			officetel, 
+			telephonenumber, 
+			status, 
+			usertype, 
+			provinceNumber, 
+			cityNumber, 
+			streetNumber, 
+			postalcode, 
+			identityNumber, 
+			qqNumber, 
+			msnNumber, 
+			orderNumber, 
+			userPwd, 
+			createTime, 
+			lastActiveTime, 
+			remark
+		) 
+	    (
+			select 
+				userid, roleid, surname, givenname, username, displayname, 
+				gender, 
+				age, 
+				birthday, 
+				photo, 
+				mail, 
+				mobile, 
+				officetel, 
+				telephonenumber, 
+				status, 
+				usertype, 
+				provinceNumber, 
+				cityNumber, 
+				streetNumber, 
+				postalcode, 
+				identityNumber, 
+				qqNumber, 
+				msnNumber, 
+				orderNumber, 
+				userPwd, 
+				createTime, 
+				lastActiveTime, 
+				remark
+			from t_blackuser where 
+			userid in
+			<foreach item="userid" collection="useridArray" open="(" separator="," close=")" >
+				#{userid}
+			</foreach>
+			and not exists (
+				select 1 from t_prizeuser where (t_blackuser.userid = t_prizeuser.userid or t_blackuser.mobile = t_prizeuser.mobile)
+			)
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_prizeuser 
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="roleid != null">
+				roleid = #{roleid},
+			</if>
+			<if test="surname != null">
+				surname = #{surname},
+			</if>
+			<if test="givenname != null">
+				givenname = #{givenname},
+			</if>
+			<if test="username != null">
+				username = #{username},
+			</if>
+			<if test="displayname != null">
+				displayname = #{displayname},
+			</if>
+			<if test="gender != null">
+				gender = #{gender},
+			</if>
+			<if test="age != null">
+				age = #{age},
+			</if>
+			<if test="birthday != null">
+				birthday = #{birthday},
+			</if>
+			<if test="photo != null">
+				photo = #{photo},
+			</if>
+			<if test="mail != null">
+				mail = #{mail},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile},
+			</if>
+			<if test="officetel != null">
+				officetel = #{officetel},
+			</if>
+			<if test="telephonenumber != null">
+				telephonenumber = #{telephonenumber},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="usertype != null">
+				usertype = #{usertype},
+			</if>
+			<if test="provincenumber != null">
+				provincenumber = #{provincenumber},
+			</if>
+			<if test="citynumber != null">
+				citynumber = #{citynumber},
+			</if>
+			<if test="streetnumber != null">
+				streetnumber = #{streetnumber},
+			</if>
+			<if test="postalcode != null">
+				postalcode = #{postalcode},
+			</if>
+			<if test="identitynumber != null">
+				identitynumber = #{identitynumber},
+			</if>
+			<if test="qqnumber != null">
+				qqnumber = #{qqnumber},
+			</if>
+			<if test="msnnumber != null">
+				msnnumber = #{msnnumber},
+			</if>
+			<if test="ordernumber != null">
+				ordernumber = #{ordernumber},
+			</if>
+			<if test="userpwd != null">
+				userpwd = #{userpwd},
+			</if>
+			<if test="lastactivetime != null and lastactivetime != ''">
+				#{lastactivetime},
+			</if>
+			<if test="remark != null">
+				remark = #{remark}
+			</if>
+	    </trim>
+		WHERE userid = #{userid}
+	</update>
+	
+	<delete id="deleteBatch">
+		delete from t_prizeuser where userid in 
+		<foreach collection="array" item="userid" open="(" close=")" separator="," >
+			#{userid}
+		</foreach>
+	</delete>
+	
+	<update id="updateUserStatus">
+  		update t_prizeuser set status = #{status}
+  		where userid in
+  		<foreach collection="useridArray" item="userid" open="(" close=")" separator=",">
+  			#{userid}
+  		</foreach>
+  	</update>
+	
+	<update id="updateUsertypeBatch">
+		update t_prizeuser set usertype = #{usertype}
+		<if test="bakcolumn1 != null and bakcolumn1 != ''">
+			,bakcolumn1 = #{bakcolumn1}
+		</if>
+		where userid in 
+		<foreach collection="useridArray" item="userid" open="(" close=")" separator="," >
+			#{userid}
+		</foreach>
+	</update>
+		
+</mapper>

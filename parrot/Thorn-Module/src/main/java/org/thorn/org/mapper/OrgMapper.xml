@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="OrgMapper">
+
+	<cache eviction="LRU" type="org.thorn.dao.mybatis.cache.CustomCache">
+		<property name="springBean" value="ehcacheService" />
+	</cache>
+
+	<resultMap id="BaseResultMap" type="org.thorn.org.entity.Org">
+		<id column="ORGID" property="orgId" jdbcType="DECIMAL" />
+		<result column="ORGCODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="PARENTORG" property="parentOrg" jdbcType="VARCHAR" />
+		<result column="ORGNAME" property="orgName" jdbcType="VARCHAR" />
+		<result column="SHOWNAME" property="showName" jdbcType="VARCHAR" />
+		<result column="ORGTYPE" property="orgType" jdbcType="VARCHAR" />
+		<result column="ORGMAIL" property="orgMail" jdbcType="VARCHAR" />
+		<result column="SORTNUM" property="sortNum" jdbcType="DECIMAL" />
+		<result column="ISSHOW" property="isShow" jdbcType="VARCHAR" />
+		<result column="ISDISABLED" property="isDisabled" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		O.ORGID,O.ORGCODE,O.PARENTORG,O.ORGNAME,
+		O.SHOWNAME,O.ORGTYPE,O.ORGMAIL,O.SORTNUM,
+		O.ISSHOW,O.ISDISABLED,O.AREA
+	</sql>
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="orgId != null and orgId != ''">
+				and O.ORGID = #{orgId,jdbcType=DECIMAL}
+      		</if>
+      		<if test="orgCode != null and orgCode != ''">
+				and O.ORGCODE = #{orgCode,jdbcType=VARCHAR}
+      		</if>
+      		<if test="parentOrg != null and parentOrg != ''">
+				and O.PARENTORG = #{parentOrg,jdbcType=VARCHAR}
+      		</if>
+      		<if test="pids != null">
+				and O.PARENTORG in
+				<foreach collection="pids" item="item" open="(" close=")"
+					separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+	    	</if>
+      		<if test="showName != null and showName != ''">
+				and O.SHOWNAME like CONCAT('%',#{showName,jdbcType=VARCHAR},'%')
+      		</if>
+      		<if test="orgType != null and orgType != ''">
+				and O.ORGTYPE = #{orgType,jdbcType=VARCHAR}
+      		</if>
+      		<if test="isShow != null and isShow != ''">
+				and O.ISSHOW = #{isShow,jdbcType=VARCHAR}
+      		</if>
+      		<if test="isDisabled != null and isDisabled != ''">
+				and O.ISDISABLED = #{isDisabled,jdbcType=VARCHAR}
+      		</if>
+      		<if test="area != null and area != ''">
+				and O.AREA = #{area,jdbcType=VARCHAR}
+      		</if>
+		</where>
+	</sql>
+
+	<insert id="insert" parameterType="org.thorn.org.entity.Org">
+		insert into T_SYS_ORG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orgCode != null and orgCode != ''">ORGCODE,</if>
+			<if test="parentOrg != null and parentOrg != ''">PARENTORG,</if>
+			<if test="orgName != null and orgName != ''">ORGNAME,</if>
+			<if test="showName != null and showName != ''">SHOWNAME,</if>
+			<if test="orgType != null and orgType != ''">ORGTYPE,</if>
+			<if test="orgMail != null and orgMail != ''">ORGMAIL,</if>
+			<if test="sortNum != null">SORTNUM,</if>
+			<if test="isShow != null and isShow != ''">ISSHOW,</if>
+			<if test="isDisabled != null and isDisabled != ''">ISDISABLED,</if>
+			<if test="area != null and area != ''">AREA,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="orgCode != null and orgCode != ''">#{orgCode,jdbcType=VARCHAR},</if>
+			<if test="parentOrg != null and parentOrg != ''">#{parentOrg,jdbcType=VARCHAR},</if>
+			<if test="orgName != null and orgName != ''">#{orgName,jdbcType=VARCHAR},</if>
+			<if test="showName != null and showName != ''">#{showName,jdbcType=VARCHAR},</if>
+			<if test="orgType != null and orgType != ''">#{orgType,jdbcType=VARCHAR},</if>
+			<if test="orgMail != null and orgMail != ''">#{orgMail,jdbcType=VARCHAR},</if>
+			<if test="sortNum != null">#{sortNum,jdbcType=DECIMAL},</if>
+			<if test="isShow != null and isShow != ''">#{isShow,jdbcType=VARCHAR},</if>
+			<if test="isDisabled != null and isDisabled != ''">#{isDisabled,jdbcType=VARCHAR},</if>
+			<if test="area != null and area != ''">#{area,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="org.thorn.org.entity.Org">
+		update T_SYS_ORG
+		<set>
+			<if test="parentOrg != null and parentOrg != ''">PARENTORG = #{parentOrg,jdbcType=VARCHAR},</if>
+			<if test="sortNum != null">SORTNUM = #{sortNum,jdbcType=DECIMAL},</if>
+			<if test="orgName != null and orgName != ''">ORGNAME = #{orgName,jdbcType=VARCHAR},</if>
+			<if test="showName != null and showName != ''">SHOWNAME = #{showName,jdbcType=VARCHAR},</if>
+			<if test="orgType != null and orgType != ''">ORGTYPE = #{orgType,jdbcType=VARCHAR},</if>
+			<if test="orgMail != null and orgMail != ''">ORGMAIL = #{orgMail,jdbcType=VARCHAR},</if>
+			<if test="isShow != null and isShow != ''">ISSHOW = #{isShow,jdbcType=VARCHAR},</if>
+			<if test="isDisabled != null and isDisabled != ''">ISDISABLED = #{isDisabled,jdbcType=VARCHAR},</if>
+			<if test="area != null and area != ''">AREA = #{area,jdbcType=VARCHAR},</if>
+		</set>
+		where ORGID = #{orgId,jdbcType=DECIMAL}
+	</update>
+
+	<delete id="delete">
+		delete from T_SYS_ORG where ORGID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=DECIMAL}
+		</foreach>
+	</delete>
+
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="hashmap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_ORG O
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	
+	<select id="selectPageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*) from T_SYS_ORG O
+		<include refid="Where_Clause" />
+	</select>
+	
+	<select id="selectParent" resultMap="BaseResultMap" parameterType="hashmap">
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_ORG O, T_SYS_ORG C
+		where O.ORGCODE = C.PARENTORG
+		<if test="orgCode != null and orgCode != ''">
+			and C.ORGCODE = #{orgCode,jdbcType=VARCHAR}
+      	</if>
+	</select>
+	
+	
+</mapper>

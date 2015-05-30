@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="UserExtendMapper">
+
+	<resultMap id="BaseResultMap" type="com.parrot.app.entity.UserExtend">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="USERID" property="userId" jdbcType="VARCHAR" />
+		<result column="USERNAME" property="userName" jdbcType="VARCHAR" />
+		<result column="ORGCODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="POSTALCODE" property="postalCode" jdbcType="VARCHAR" />
+		<result column="CONTACTS" property="contacts" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="BANKNAME" property="bankName" jdbcType="VARCHAR" />
+		<result column="BANK" property="bank" jdbcType="VARCHAR" />
+		<result column="BANKACCOUNT" property="bankAccount" jdbcType="VARCHAR" />
+		<result column="COMPANYCTF" property="companyCtf" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		P.ID,P.ADDRESS,P.POSTALCODE,P.CONTACTS,P.PHONE,P.BANKNAME,P.BANK,
+		P.BANKACCOUNT,P.COMPANYCTF,U.USERID, U.USERNAME,U.ORGCODE
+  	</sql>
+
+	<sql id="Where_Clause">
+		<if test="id != null">
+			AND P.ID = #{id,jdbcType=DECIMAL}
+     	</if>
+		<if test="userId != null and userId != ''">
+			and U.USERID = #{userId,jdbcType=VARCHAR}
+	    	</if>
+		<if test="userName != null and userName != ''">
+			and U.USERNAME like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+      		</if>
+		<if test="orgCode != null and orgCode != ''">
+			and U.ORGCODE = #{orgCode,jdbcType=VARCHAR}
+      		</if>
+		<if test="isDisabled != null and isDisabled != ''">
+			and U.ISDISABLED = #{isDisabled,jdbcType=VARCHAR}
+      		</if>
+		<if test="isShow != null and isShow != ''">
+			and U.ISSHOW = #{isShow,jdbcType=VARCHAR}
+      		</if>
+	</sql>
+
+	<insert id="insert" parameterType="com.parrot.app.entity.UserExtend">
+		insert into T_USER_EXTEND
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null and userId != ''">USERID,</if>
+			<if test="address != null and address != ''">ADDRESS,</if>
+			<if test="postalCode != null and postalCode != ''">POSTALCODE,</if>
+			<if test="contacts != null and contacts != ''">CONTACTS,</if>
+			<if test="phone != null and phone != ''">PHONE,</if>
+			<if test="bankName != null and bankName != ''">BANKNAME,</if>
+			<if test="bank != null and bank != ''">BANK,</if>
+			<if test="bankAccount != null and bankAccount != ''">BANKACCOUNT,</if>
+			<if test="companyCtf != null and companyCtf != ''">COMPANYCTF,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null and userId != ''">#{userId,jdbcType=VARCHAR},</if>
+			<if test="address != null and address != ''">#{address,jdbcType=VARCHAR},</if>
+			<if test="postalCode != null and postalCode != ''">#{postalCode,jdbcType=VARCHAR},</if>
+			<if test="contacts != null and contacts != ''">#{contacts,jdbcType=VARCHAR},</if>
+			<if test="phone != null and phone != ''">#{phone,jdbcType=VARCHAR},</if>
+			<if test="bankName != null and bankName != ''">#{bankName,jdbcType=VARCHAR},</if>
+			<if test="bank != null and bank != ''">#{bank,jdbcType=VARCHAR},</if>
+			<if test="bankAccount != null and bankAccount != ''">#{bankAccount,jdbcType=VARCHAR},</if>
+			<if test="companyCtf != null and companyCtf != ''">#{companyCtf,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.parrot.app.entity.UserExtend">
+		update T_USER_EXTEND
+		<set>
+			<if test="userId != null and userId != ''">USERID = #{userId,jdbcType=VARCHAR},</if>
+			<if test="address != null and address != ''">ADDRESS = #{address,jdbcType=VARCHAR},</if>
+			<if test="postalCode != null and postalCode != ''">POSTALCODE = #{postalCode,jdbcType=VARCHAR},</if>
+			<if test="contacts != null and contacts != ''">CONTACTS = #{contacts,jdbcType=VARCHAR},</if>
+			<if test="phone != null and phone != ''">PHONE = #{phone,jdbcType=VARCHAR},</if>
+			<if test="bankName != null and bankName != ''">BANKNAME = #{bankName,jdbcType=VARCHAR},</if>
+			<if test="bank != null and bank != ''">BANK = #{bank,jdbcType=VARCHAR},</if>
+			<if test="bankAccount != null and bankAccount != ''">BANKACCOUNT = #{bankAccount,jdbcType=VARCHAR},</if>
+			<if test="companyCtf != null and companyCtf != ''">COMPANYCTF = #{companyCtf,jdbcType=VARCHAR},</if>
+		</set>
+		where USERID = #{userId,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectPage" parameterType="hashmap" resultMap="BaseResultMap">
+		<include refid="MySQLCommonMapper.pagingStart" />
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_USER U left join T_USER_EXTEND P
+		on U.USERID = P.USERID
+		WHERE U.DEFAULTROLE != 'SYSADMIN'
+		AND NOT EXISTS(
+		SELECT * FROM t_sys_user_role R
+		WHERE R.ROLECODE IN('PROVINCEUSER','CENTRALUSER')
+		AND R.USERID = U.USERID)
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo" />
+		<include refid="MySQLCommonMapper.pagingEnd" />
+	</select>
+	<select id="selectPageCount" parameterType="hashmap" resultType="long">
+		select count(*) from T_SYS_USER U WHERE U.DEFAULTROLE != 'SYSADMIN'
+		AND NOT EXISTS(
+		SELECT * FROM t_sys_user_role R
+		WHERE R.ROLECODE IN('PROVINCEUSER','CENTRALUSER')
+		AND R.USERID = U.USERID)
+		<include refid="Where_Clause" />
+	</select>
+
+</mapper>

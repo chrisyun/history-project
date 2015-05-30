@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.thorn</groupId>
+	<artifactId>Thorn-birds</artifactId>
+	<packaging>pom</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	
+	<properties>
+		<!-- 主要依赖jar包版本 -->
+		<spring.version>3.0.5.RELEASE</spring.version>
+		<mybatis.version>3.0.5</mybatis.version>
+		<spring-security.version>3.0.5.RELEASE</spring-security.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+
+	</dependencies>
+
+
+	<modules>
+		<module>Thorn-Core</module>
+		<module>Thorn-Dao</module>
+		<module>Thorn-Jbpm</module>
+		<module>Thorn-Web</module>
+		<module>kaola</module>
+		<module>parrot</module>
+		<module>parrot-data-init</module>
+		<module>Thorn-Module</module>
+	</modules>
+
+
+</project>

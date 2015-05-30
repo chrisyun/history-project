@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ReseverCostMapper">
+
+	<resultMap id="BaseResultMap" type="com.parrot.app.entity.ReseverCost">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="RESEVERID" property="reseverId" jdbcType="DECIMAL" />
+		<result column="RESEVERNAME" property="reseverName" jdbcType="VARCHAR" />
+		<result column="YEAR" property="year" jdbcType="DECIMAL" />
+		<result column="CREATER" property="creater" jdbcType="VARCHAR" />
+		<result column="CREATERNAME" property="createrName" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="ATTIDS" property="attids" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="POSTALCODE" property="postalCode" jdbcType="VARCHAR" />
+		<result column="CONTACTS" property="contacts" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="APPREASON" property="appReason" jdbcType="VARCHAR" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="TARGET" property="target" jdbcType="VARCHAR" />
+		<result column="APPLYMONEY" property="applyMoney" jdbcType="DOUBLE" />
+		<result column="GIVENMONEY" property="givenMoney" jdbcType="DOUBLE" />
+		<result column="BUDGET" property="budget" jdbcType="VARCHAR" />
+		<result column="APPLYTIME" property="applyTime" jdbcType="VARCHAR" />
+		<result column="ACTIVITY" property="activity" jdbcType="VARCHAR" />
+		<result column="FLOWSTATUS" property="flowStatus" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		R.ID,R.RESEVERID,R.RESEVERNAME,R.YEAR,R.CREATER,R.CREATERNAME,R.PROVINCE,
+		R.ATTIDS,R.ADDRESS,R.POSTALCODE,R.CONTACTS,R.PHONE,R.APPREASON,R.CONTENT,
+		R.TARGET,R.APPLYMONEY,R.GIVENMONEY,R.BUDGET,R.APPLYTIME
+  	</sql>
+
+	<sql id="Where_Clause">
+			<if test="id != null">
+				AND R.ID = #{id,jdbcType=DECIMAL}
+      		</if>
+			<if test="year != null">
+				AND R.YEAR = #{year,jdbcType=DECIMAL}
+      		</if>
+      		<if test="reseverId != null">
+				AND R.RESEVERID = #{reseverId,jdbcType=DECIMAL}
+      		</if>
+      		<if test="reseverName != null and reseverName != ''">
+				and R.RESEVERNAME like CONCAT('%',#{reseverName,jdbcType=VARCHAR},'%')
+      		</if>
+      		<if test="createrName != null and createrName != ''">
+				and R.CREATERNAME like CONCAT('%',#{createrName,jdbcType=VARCHAR},'%')
+      		</if>
+      		<if test="province != null and province != ''">
+				AND R.PROVINCE = #{province,jdbcType=VARCHAR}
+      		</if>
+      		<if test="creater != null and creater != ''">
+				AND R.CREATER = #{creater,jdbcType=VARCHAR}
+      		</if>
+      		<if test="startTime != null and startTime != ''">
+				AND R.APPLYTIME &gt;= #{startTime,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="endTime != null and endTime != ''">
+				AND R.APPLYTIME &lt;= #{endTime,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="activity != null and activity != ''">
+				AND W.ACTIVITY = #{activity,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="flowStatus != null and flowStatus != ''">
+				AND W.FLOWSTATUS = #{flowStatus,jdbcType=VARCHAR}
+	    	</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" 
+		parameterType="com.parrot.app.entity.ReseverCost">
+		insert into T_RESEVER_COST
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="reseverId != null">RESEVERID,</if>
+			<if test="reseverName != null and reseverName != ''">RESEVERNAME,</if>
+			<if test="year != null">YEAR,</if>
+			<if test="province != null and province != ''">PROVINCE,</if>
+			<if test="attids != null and attids != ''">ATTIDS,</if>
+			<if test="creater != null and creater != ''">CREATER,</if>
+			<if test="createrName != null and createrName != ''">CREATERNAME,</if>
+			<if test="address != null and address != ''">ADDRESS,</if>
+			<if test="postalCode != null and postalCode != ''">POSTALCODE,</if>
+			<if test="contacts != null and contacts != ''">CONTACTS,</if>
+			<if test="phone != null and phone != ''">PHONE,</if>
+			<if test="appReason != null and appReason != ''">APPREASON,</if>
+			<if test="content != null and content != ''">CONTENT,</if>
+			<if test="target != null and target != ''">TARGET,</if>
+			<if test="budget != null and budget != ''">BUDGET,</if>
+			<if test="applyTime != null and applyTime != ''">APPLYTIME,</if>
+			<if test="applyMoney != null">APPLYMONEY,</if>
+			<if test="givenMoney != null">GIVENMONEY,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="reseverId != null">#{reseverId,jdbcType=DECIMAL},</if>
+			<if test="reseverName != null and reseverName != ''">#{reseverName,jdbcType=VARCHAR},</if>
+			<if test="year != null">#{year,jdbcType=DECIMAL},</if>
+			<if test="province != null and province != ''">#{province,jdbcType=VARCHAR},</if>
+			<if test="attids != null and attids != ''">#{attids,jdbcType=VARCHAR},</if>
+			<if test="creater != null and creater != ''">#{creater,jdbcType=VARCHAR},</if>
+			<if test="createrName != null and createrName != ''">#{createrName,jdbcType=VARCHAR},</if>
+			<if test="address != null and address != ''">#{address,jdbcType=VARCHAR},</if>
+			<if test="postalCode != null and postalCode != ''">#{postalCode,jdbcType=VARCHAR},</if>
+			<if test="contacts != null and contacts != ''">#{contacts,jdbcType=VARCHAR},</if>
+			<if test="phone != null and phone != ''">#{phone,jdbcType=VARCHAR},</if>
+			<if test="appReason != null and appReason != ''">#{appReason,jdbcType=VARCHAR},</if>
+			<if test="content != null and content != ''">#{content,jdbcType=VARCHAR},</if>
+			<if test="target != null and target != ''">#{target,jdbcType=VARCHAR},</if>
+			<if test="budget != null and budget != ''">#{budget,jdbcType=VARCHAR},</if>
+			<if test="applyTime != null and applyTime != ''">#{applyTime,jdbcType=VARCHAR},</if>
+			<if test="applyMoney != null">#{applyMoney,jdbcType=DOUBLE},</if>
+			<if test="givenMoney != null">#{givenMoney,jdbcType=DOUBLE},</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="com.parrot.app.entity.ReseverCost">
+		update T_RESEVER_COST
+		<set>
+			<if test="id != null">ID = #{id,jdbcType=DECIMAL},</if>
+			<if test="reseverId != null">RESEVERID = #{reseverId,jdbcType=DECIMAL},</if>
+			<if test="reseverName != null and reseverName != ''">RESEVERNAME = #{reseverName,jdbcType=VARCHAR},</if>
+			<if test="year != null">YEAR = #{year,jdbcType=DECIMAL},</if>
+			<if test="province != null and province != ''">PROVINCE = #{province,jdbcType=VARCHAR},</if>
+			<if test="attids != null and attids != ''">ATTIDS = #{attids,jdbcType=VARCHAR},</if>
+			<if test="creater != null and creater != ''">CREATER = #{creater,jdbcType=VARCHAR},</if>
+			<if test="createrName != null and createrName != ''">CREATERNAME = #{createrName,jdbcType=VARCHAR},</if>
+			<if test="address != null and address != ''">ADDRESS = #{address,jdbcType=VARCHAR},</if>
+			<if test="postalCode != null and postalCode != ''">POSTALCODE = #{postalCode,jdbcType=VARCHAR},</if>
+			<if test="contacts != null and contacts != ''">CONTACTS = #{contacts,jdbcType=VARCHAR},</if>
+			<if test="phone != null and phone != ''">PHONE = #{phone,jdbcType=VARCHAR},</if>
+			<if test="appReason != null and appReason != ''">APPREASON = #{appReason,jdbcType=VARCHAR},</if>
+			<if test="content != null and content != ''">CONTENT = #{content,jdbcType=VARCHAR},</if>
+			<if test="target != null and target != ''">TARGET = #{target,jdbcType=VARCHAR},</if>
+			<if test="budget != null and budget != ''">BUDGET = #{budget,jdbcType=VARCHAR},</if>
+			<if test="applyTime != null and applyTime != ''">APPLYTIME = #{applyTime,jdbcType=VARCHAR},</if>
+			<if test="givenMoney != null">GIVENMONEY = #{givenMoney,jdbcType=DOUBLE},</if>
+			<if test="applyMoney != null">APPLYMONEY = #{applyMoney,jdbcType=DOUBLE},</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+	<delete id="delete">
+		delete from T_RESEVER_COST where ID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=DECIMAL}
+		</foreach>
+	</delete>
+	
+	<select id="selectList" parameterType="hashmap"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_RESEVER_COST R WHERE 1=1
+		<include refid="Where_Clause" />
+	</select>
+	
+	<select id="selectMax" parameterType="hashmap"
+		resultMap="BaseResultMap">
+		select R.ADDRESS,R.POSTALCODE,R.CONTACTS,R.PHONE from t_resever_cost R 
+		where R.applytime =  
+		(select max(c.applytime) from t_resever_cost c 
+		where c.RESEVERID = #{reseverId,jdbcType=DECIMAL} group by c.RESEVERID)
+	</select>
+	
+	<select id="selectPage" parameterType="hashmap"
+		resultMap="BaseResultMap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select R.ID,R.RESEVERID,R.RESEVERNAME,R.YEAR,
+			   R.CREATER,R.CREATERNAME,R.PROVINCE,
+			   R.APPLYMONEY,R.GIVENMONEY,R.APPLYTIME,
+			   W.ACTIVITY,W.FLOWSTATUS
+		from T_RESEVER_COST R,T_WORKFLOW W 
+		WHERE R.ID = W.PID AND W.FLOWTYPE = 'resever' 
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	<select id="selectPageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*)  
+		from T_RESEVER_COST R,T_WORKFLOW W 
+		WHERE R.ID = W.PID AND W.FLOWTYPE = 'resever' 
+		<include refid="Where_Clause" />
+	</select>
+	
+	<select id="selectCostSum" parameterType="hashmap"
+		resultType="Long">
+		select sum(R.APPLYMONEY)*10000 
+		from T_RESEVER_COST R,T_WORKFLOW W 
+		WHERE W.ACTIVITY = '审批完成已归档' 
+		AND R.ID = W.PID AND W.FLOWTYPE = 'resever' 
+		<if test="province != null and province != ''">
+			AND R.PROVINCE = #{province,jdbcType=VARCHAR}
+      	</if>
+		AND R.YEAR = #{year,jdbcType=DECIMAL}
+	</select>
+</mapper>

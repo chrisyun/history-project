@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- NCFramework struts配置开始 -->
+	<package name="ncframework-pkg" extends="struts-default">
+	</package>
+	
+	<!-- datadict package -->
+	<package name="datadict_pkg" namespace="/datadict" extends="ncframework-pkg">
+		<action name="dictAction" class="/datadict/dictAction">
+		</action>
+	</package>
+	
+	<!-- log package -->
+	<package name="log_pkg" namespace="/log" extends="ncframework-pkg">
+		<action name="logAction" class="/log/logAction">
+		</action>
+	</package>
+	
+	<!-- rights package -->
+	<package name="rights_pkg" namespace="/rights" extends="ncframework-pkg">
+		<action name="systemMenuAction" class="/rights/systemMenuAction">
+		</action>
+		<action name="roleAction" class="/rights/roleAction">
+		</action>
+	</package>
+	<!-- NCFramework struts配置结束 -->
+	
+	
+	<!-- Business struts配置开始 -->
+	
+	<package name="business-pkg" extends="struts-default">
+		<action name="userAction" class="userAction">
+		</action>
+		<action name="orgAction" class="orgAction">
+		</action>
+		<action name="authAction" class="authAction">
+		</action>
+		
+		<action name="checkSessionExpire" class="userAction" method="checkSessionExpire">
+		</action>
+		
+		<action name="namingSqlAction" class="namingSqlAction">
+		</action>
+		
+		<action name="fileAction" class="fileAction"></action>
+		
+		<action name="projectAction" class="projectAction"></action>
+		
+		<action name="projectMedAction" class="projectMedAction"></action>
+		
+		<action name="projectFinAction" class="projectFinAction"></action>
+		
+		<action name="switchAction" class="switchAction"></action>
+	</package>
+	<!-- Business struts配置结束 -->
+	
+	
+</struts>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AttMapper">
+
+	<resultMap id="BaseResultMap" type="org.thorn.attachment.entity.Attachment">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="FILENAME" property="fileName" jdbcType="VARCHAR" />
+		<result column="FILEPATH" property="filePath" jdbcType="VARCHAR" />
+		<result column="SAVETYPE" property="saveType" jdbcType="VARCHAR" />
+		<result column="FILETYPE" property="fileType" jdbcType="VARCHAR" />
+		<result column="FILE" property="file" jdbcType="BLOB" />
+		<result column="UPLOADER" property="uploader" jdbcType="VARCHAR" />
+		<result column="UPLOADTIME" property="uploadTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, FILENAME, FILEPATH, SAVETYPE, FILETYPE, UPLOADER,
+		UPLOADTIME
+    </sql>
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="id != null">
+				and ID = #{id,jdbcType=DECIMAL}
+      		</if>
+			<if test="uploader != null and uploader != ''">
+				and UPLOADER = #{uploader,jdbcType=VARCHAR}
+      		</if>
+			<if test="FILETYPE != null and FILETYPE != ''">
+				and FILETYPE = #{fileType,jdbcType=VARCHAR}
+      		</if>
+			<if test="startTime != null and startTime != ''">
+				and UPLOADTIME &gt;= #{startTime,jdbcType=VARCHAR}
+      		</if>
+			<if test="endTime != null and endTime != ''">
+				and UPLOADTIME &lt; #{endTime,jdbcType=VARCHAR}
+      		</if>
+      		<if test="ids != null">
+      			and id in
+	      		<foreach collection="ids" item="item" open="(" close=")"
+				separator=",">
+					#{item,jdbcType=DECIMAL}
+				</foreach>
+      		</if>
+		</where>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true"
+		parameterType="org.thorn.attachment.entity.Attachment">
+		insert into T_COMMON_ATT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fileName != null and fileName != ''">FILENAME,</if>
+			<if test="filePath != null and filePath != ''">FILEPATH,</if>
+			<if test="saveType != null and saveType != ''">SAVETYPE,</if>
+			<if test="file != null">FILE,</if>
+			<if test="fileType != null and fileType != ''">FILETYPE,</if>
+			<if test="uploader != null and uploader != ''">UPLOADER,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fileName != null and fileName != ''">#{fileName,jdbcType=VARCHAR},</if>
+			<if test="filePath != null and filePath != ''">#{filePath,jdbcType=VARCHAR},</if>
+			<if test="saveType != null and saveType != ''">#{saveType,jdbcType=VARCHAR},</if>
+			<if test="file != null">#{file,jdbcType=BLOB},</if>
+			<if test="fileType != null and fileType != ''">#{fileType,jdbcType=VARCHAR},</if>
+			<if test="uploader != null and uploader != ''">#{uploader,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+
+	<delete id="delete">
+		delete from T_COMMON_ATT where id in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=DECIMAL}
+		</foreach>
+	</delete>
+
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="hashmap">
+		<include refid="MySQLCommonMapper.pagingStart" />
+		select
+		<include refid="Base_Column_List" />
+		from T_COMMON_ATT
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo" />
+		<include refid="MySQLCommonMapper.pagingEnd" />
+	</select>
+
+	<select id="selectPageCount" parameterType="hashmap" resultType="long">
+		select count(*) from T_COMMON_ATT
+		<include refid="Where_Clause" />
+	</select>
+
+	<select id="selectAtt" resultMap="BaseResultMap" parameterType="int">
+		select
+		<include refid="Base_Column_List" />
+		,file
+		from T_COMMON_ATT where id = #{id,jdbcType=DECIMAL}
+	</select>
+
+
+</mapper>

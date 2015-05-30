@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Question Mappper -->
+<mapper namespace="SwitchMapper">
+	
+	<select id="queryList" resultType="com.talkweb.ncfw.entity.FlowSwitch">
+		select flowid,status
+		  from t_flow_switch
+	</select>
+	
+	<update id="updateStatus">
+		update t_flow_switch set status = #{status} where flowid in
+		<foreach collection="flowidArray" item="flowid" open="(" close=")" separator=",">
+  			#{flowid}
+  		</foreach>
+	</update>
+	
+	<select id="queryById" resultType="java.lang.String" parameterType="java.lang.String">
+		select status from t_flow_switch where flowid = #{flowid}
+	</select>
+	
+</mapper>

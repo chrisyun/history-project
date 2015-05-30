@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- ###########################dataSource########################### -->
+	<!-- 
+	<bean id="dataSource-jndi" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="${jndi}"></property>
+	</bean> -->
+
+	<bean id="dataSource-jdbc" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+	</bean>
+	<!-- ###########################dataSource########################### -->
+
+
+	<!-- ###########################transaction########################### -->
+
+	<!-- 事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource-jdbc" />
+	</bean>
+
+	<!-- 通过AOP定义的事务增强切面 -->
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="tracationMethods"
+			expression="execution(public * *.*.*.service.*ServiceImpl.*(..)) 
+			|| @annotation(org.thorn.dao.core.AOPTransactional)" />
+		<aop:advisor pointcut-ref="tracationMethods" advice-ref="txAdvice" />
+	</aop:config>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="search*" read-only="true" />
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" rollback-for="DBAccessException" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- @Transactional注解式事务管理 -->
+	<!-- proxy-target-class为true，spring将通过子类来代理业务类，使用true则需要引入cglib -->
+	<!-- proxy-target-class为false，spring将使用基于接口的代理 -->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/> -->
+	<!-- ###########################transaction########################### -->
+</beans>

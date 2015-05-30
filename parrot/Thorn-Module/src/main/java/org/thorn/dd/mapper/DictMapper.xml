@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DictMapper">
+	
+	<cache eviction="LRU" type="org.thorn.dao.mybatis.cache.CustomCache">
+		<property name="springBean" value="ehcacheService" />
+	</cache>
+	
+	<resultMap id="DictResultMap" type="org.thorn.dd.entity.Dict">
+		<id column="DNAME" jdbcType="VARCHAR" property="dname" />
+		<id column="TYPEID" jdbcType="VARCHAR" property="typeId" />
+		<result column="DVALUE" jdbcType="VARCHAR" property="dvalue" />
+		<result column="SORTNUM" jdbcType="DECIMAL" property="sortNum" />
+	</resultMap>
+	
+	<resultMap id="DictTypeResultMap" type="org.thorn.dd.entity.DictType">
+		<id column="ENAME" jdbcType="VARCHAR" property="ename" />
+		<result column="CNAME" jdbcType="VARCHAR" property="cname" />
+		<result column="TYPEDESC" jdbcType="VARCHAR" property="typeDesc" />
+	</resultMap>
+	
+
+	<sql id="Dict_Column_List">
+		DNAME, DVALUE, SORTNUM, TYPEID
+  	</sql>
+  	<sql id="DictType_Column_List">
+		ENAME, CNAME, TYPEDESC
+  	</sql>
+
+	<sql id="Dict_Where_Clause">
+		<where>
+			<if test="typeId != null and typeId != ''">
+				AND TYPEID = #{typeId,jdbcType=VARCHAR}
+      		</if>
+			<if test="dname != null and dname != ''">
+				AND DNAME = #{dname,jdbcType=VARCHAR}
+      		</if>
+		</where>
+	</sql>
+	<sql id="DictType_Where_Clause">
+		<where>
+			<if test="ename != null and ename != ''">
+				AND ENAME = #{ename,jdbcType=VARCHAR}
+      		</if>
+			<if test="cname != null and cname != ''">
+				AND CNAME like CONCAT('%',#{cname,jdbcType=VARCHAR},'%')
+      		</if>
+		</where>
+	</sql>
+	
+	<!-- ******************************************************** -->
+	<insert id="insertDict" parameterType="org.thorn.dd.entity.Dict">
+		insert into T_SYS_DICT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dname != null and dname != ''">DNAME,</if>
+			<if test="dvalue != null and dvalue != ''">DVALUE,</if>
+			<if test="sortNum != null and sortNum != ''">SORTNUM,</if>
+			<if test="typeId != null and typeId != ''">TYPEID,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dname != null and dname != ''">#{dname,jdbcType=VARCHAR},</if>
+			<if test="dvalue != null and dvalue != ''">#{dvalue,jdbcType=VARCHAR},</if>
+			<if test="sortNum != null and sortNum != ''">#{sortNum,jdbcType=DECIMAL},</if>
+			<if test="typeId != null and typeId != ''">#{typeId,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>	
+	<insert id="insertDictType" parameterType="org.thorn.dd.entity.DictType">
+		insert into T_SYS_DICT_TYPE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ename != null and ename != ''">ENAME,</if>
+			<if test="cname != null and cname != ''">CNAME,</if>
+			<if test="typeDesc != null and typeDesc != ''">TYPEDESC,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ename != null and ename != ''">#{ename,jdbcType=VARCHAR},</if>
+			<if test="cname != null and cname != ''">#{cname,jdbcType=VARCHAR},</if>
+			<if test="typeDesc != null and typeDesc != ''">#{typeDesc,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+	<!-- ******************************************************** -->
+	<delete id="deleteByTypeIds">
+		delete from T_SYS_DICT where TYPEID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<delete id="deleteDict">
+		delete from T_SYS_DICT where DNAME in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		and TYPEID = #{typeId,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteDictType">
+		delete from T_SYS_DICT_TYPE where ENAME in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<!-- ******************************************************** -->
+	<update id="updateDict" parameterType="org.thorn.dd.entity.Dict">
+		update T_SYS_DICT
+		<set>
+			<if test="dvalue != null and dvalue != ''">DVALUE = #{dvalue,jdbcType=VARCHAR},</if>
+			<if test="sortNum != null">SORTNUM = #{sortNum,jdbcType=DECIMAL},</if>
+		</set>
+		where DNAME = #{dname,jdbcType=VARCHAR} AND TYPEID = #{typeId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateDictType" parameterType="org.thorn.dd.entity.DictType">
+		update T_SYS_DICT_TYPE
+		<set>
+			<if test="cname != null and cname != ''">
+				CNAME = #{cname,jdbcType=VARCHAR},
+      		</if>
+			<if test="typeDesc != null and typeDesc != ''">
+				TYPEDESC = #{typeDesc,jdbcType=VARCHAR},
+      		</if>
+		</set>
+		where ENAME = #{ename,jdbcType=VARCHAR}
+	</update>
+	<!-- ******************************************************** -->
+	<select id="selectDict" parameterType="hashmap" resultMap="DictResultMap">
+		select
+		<include refid="Dict_Column_List" />
+		from T_SYS_DICT
+		<include refid="Dict_Where_Clause" />
+		order by SORTNUM ASC
+	</select>
+	<select id="selectTypePage" parameterType="hashmap"
+		resultMap="DictTypeResultMap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="DictType_Column_List" />
+		from T_SYS_DICT_TYPE
+		<include refid="DictType_Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	<select id="selectTypePageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*) from T_SYS_DICT_TYPE
+		<include refid="DictType_Where_Clause" />
+	</select>
+
+</mapper>

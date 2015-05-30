@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true"/>
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<setting name="multipleResultSetsEnabled" value="true"/>
+		<setting name="useColumnLabel" value="true"/>
+		<setting name="useGeneratedKeys" value="false"/><!--
+		<setting name="enhancementEnabled" value="false"/>
+		--><setting name="defaultExecutorType" value="SIMPLE"/>
+		<setting name="defaultStatementTimeout" value="25000"/>
+	</settings>
+	
+	<mappers>
+		
+		<!-- ncframework mappers begin -->
+		
+		<!-- Common Mappers -->
+		<mapper resource="com/talkweb/ncframework/pub/dao/maps/CommonMapper_mysql.xml"/>
+		
+		<!-- DataDict Mappers -->
+		<mapper resource="com/talkweb/ncframework/modules/datadict/dao/impl/maps/DictType_mysql.xml"/>
+		<mapper resource="com/talkweb/ncframework/modules/datadict/dao/impl/maps/DictEntry_mysql.xml"/>
+		
+		<!-- Log Mappers -->
+		<mapper resource="com/talkweb/ncframework/modules/log/dao/impl/maps/SysOperateLog_mysql.xml"/>
+		
+		<!-- Role Mappers -->
+		<mapper resource="com/talkweb/ncframework/modules/rights/role/rolemanage/dao/impl/maps/Role_mysql.xml"/>
+		
+		<!-- SystemMenu Mappers -->
+		<mapper resource="com/talkweb/ncframework/modules/rights/menu/dao/impl/maps/SystemMenu_mysql.xml"/>
+	
+		<!-- ncframework mappers end -->
+		
+		
+		<!-- business mappers begin -->
+		<mapper resource="com/talkweb/ncfw/dao/impl/mappers/User_mysql.xml"/>		
+		
+		<!-- RoleMenu Maper -->
+		<mapper resource="com/talkweb/ncfw/dao/impl/mappers/RoleMenu_mysql.xml"/>
+		
+		<mapper resource="com/talkweb/ncfw/dao/impl/mappers/Project_mysql.xml"/>
+		<mapper resource="com/talkweb/ncfw/dao/impl/mappers/Minds_mysql.xml"/>
+		<mapper resource="com/talkweb/ncfw/dao/impl/mappers/MedProject_mysql.xml"/>
+		<mapper resource="com/talkweb/ncfw/dao/impl/mappers/FinProject_mysql.xml"/>
+		
+		<mapper resource="com/talkweb/ncfw/dao/impl/mappers/Org_mysql.xml"/>	
+		<mapper resource="com/talkweb/ncfw/dao/impl/mappers/File_mysql.xml"/>
+		<mapper resource="com/talkweb/ncfw/dao/impl/mappers/Switch_mysql.xml"/>
+		<!-- business mappers end -->
+	
+	</mappers>
+</configuration>

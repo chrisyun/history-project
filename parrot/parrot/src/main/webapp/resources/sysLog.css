@@ -1,0 +1,130 @@
+body {
+	margin-top: -10px;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+h2 {
+	text-align: center;
+	margin-top: 1em;
+}
+
+table.nav {
+	margin-top: -10px;
+	margin-left: 20px;
+	margin-right: 20px;
+	width: 10em;
+	float: right;
+	overflow: auto;
+}
+
+div.logContent {
+	margin-top: 30px;
+}
+
+div.logContent p {
+	margin-left: 20px;
+	fint-size: 16px;
+}
+
+div.logContent hr {
+	margin-left: 8px;
+}
+
+table { /*border-left: 2px solid #AAA;
+  border-right: 2px solid #AAA;*/
+	
+}
+
+tr.even {
+	background: #FFFFFF;
+}
+
+tr.odd {
+	background: #EAEAEA;
+}
+
+tr.error {
+	font-weight: bold;
+	color: #FF4040
+}
+
+td {
+	padding-right: 1ex;
+	padding-left: 1ex;
+	padding-top: 0ex;
+	/*border-right: 2px solid #AAA;*/
+}
+
+td.Date {
+	text-align: center;
+	font-family: courier, monospace;
+	font-size: smaller;
+	width: 20%;
+}
+
+td.Thread {
+	text-align: left;
+	width: 17%;
+	font-size: smaller;
+}
+
+td.Level {
+	text-align: center;
+	font-family: courier, monospace;
+	font-size: smaller;
+	width: 5%;
+}
+
+td.Logger {
+	text-align: left;
+	width: 13%;
+}
+
+td.Message {
+	font-size: smaller;
+	width: 50%;
+}
+
+tr.header {
+	background: #596ED5;
+	color: #FFF;
+	font-weight: bold;
+	font-size: larger;
+}
+
+td.Exception {
+	background: #A2AEE8;
+	font-family: courier, monospace;
+}
+
+td.sexy {
+	border-top: 2px solid #DDD;
+	border-left: 2px solid #DDD;
+	border-right: 2px solid #888;
+	border-bottom: 2px solid #888;
+}
+
+.red {
+	color: #CC0000;
+}
+
+.orange {
+	color: #FF6600;
+}
+
+A.sexy,INPUT.sexy,span.sexy { /*background: #FFF; */
+	color: #0079C5;
+	font-weight: bold;
+	font-family: "Comic Sans MS", sans-serif;
+	font-size: 14px;
+	white-space: nowrap;
+	padding: 0px 1em 0px 1em;
+	margin: 5px 0px 3px 0px;
+	text-decoration: none;
+}
+
+td.sexy:hover,A.sexy:hover,INPUT.sexy:hover,INPUT.sexy_hover,span.sexy:hover
+	{
+	background: #E0E0EF;
+}

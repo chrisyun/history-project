@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AuthMapper">
+	
+	<cache eviction="LRU" type="org.thorn.dao.mybatis.cache.CustomCache">
+		<property name="springBean" value="ehcacheService" />
+	</cache>
+	
+	<resultMap id="RoleResultMap" type="org.thorn.role.entity.Role">
+		<id column="ROLECODE" property="roleCode" jdbcType="VARCHAR" />
+		<result column="ROLENAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="ROLEDESC" property="roleDesc" jdbcType="VARCHAR" />
+		<result column="ISDISABLED" property="isDisabled" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- ****************************Source****************************** -->
+	<select id="querySourceByRole" parameterType="string" resultType="string">
+		select r.SOURCECODE from T_SYS_ROLE_RES r where r.ROLECODE = #{roleCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="querySourceByRoleList" resultType="string">
+		select distinct SOURCECODE from T_SYS_ROLE_RES
+		where ROLECODE in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+
+	<select id="queryRoleBySource" resultMap="RoleResultMap">
+		select distinct ROLECODE from T_SYS_ROLE_RES
+		where SOURCECODE in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+
+	<delete id="deleteSourceByRole" parameterType="string">
+		delete from T_SYS_ROLE_RES where ROLECODE = #{code,jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertRoleSource" parameterType="hashmap">
+		insert into T_SYS_ROLE_RES(ROLECODE,SOURCECODE) 
+		values(#{roleCode,jdbcType=VARCHAR},#{sourceCode,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- ****************************User******************************** -->
+	<resultMap id="UserResultMap" type="org.thorn.user.entity.User">
+		<id column="USERID" property="userId" jdbcType="VARCHAR" />
+		<result column="USERNAME" property="userName" jdbcType="VARCHAR" />
+		<result column="SN" property="sn" jdbcType="VARCHAR" />
+		<result column="USERACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+		<result column="USERPWD" property="userPwd" jdbcType="VARCHAR" />
+		<result column="GENDER" property="gender" jdbcType="VARCHAR" />
+		<result column="CUMAIL" property="cumail" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="ORGCODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="ORGNAME" property="orgName" jdbcType="VARCHAR" />
+		<result column="DEFAULTROLE" property="defaultRole" jdbcType="VARCHAR" />
+		<result column="ISDISABLED" property="isDisabled" jdbcType="VARCHAR" />
+		<result column="ISSHOW" property="isShow" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+		<result column="SORTNUM" property="sortNum" jdbcType="DECIMAL" />
+	</resultMap>
+	
+	<!-- 过滤掉禁用的角色 -->
+	<select id="queryRoleByUser" resultMap="RoleResultMap"
+		parameterType="string">
+		select U.ROLECODE from T_SYS_USER_ROLE U,T_SYS_ROLE R
+		where U.USERID = #{userid,jdbcType=VARCHAR} 
+		AND U.ROLECODE = R.ROLECODE 
+		AND R.ISDISABLED = 'NO'
+	</select>
+	
+	<delete id="deleteUserAllRole" parameterType="string">
+		delete from T_SYS_USER_ROLE where USERID = #{userId,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insertUserRole" parameterType="hashmap">
+		insert into T_SYS_USER_ROLE(ROLECODE,USERID) 
+		values(#{roleCode,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="deleteUserRole">
+		delete from T_SYS_USER_ROLE where USERID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		and ROLECODE = #{roleCode,jdbcType=VARCHAR}
+	</delete>
+
+	<sql id="User_Role_Column_List">
+		U.USERID,U.USERACCOUNT,U.USERNAME,U.CUMAIL,
+		U.ISSHOW,U.ISDISABLED,U.DEFAULTROLE 
+	</sql>
+	
+	<sql id="User_Page_In_Role">
+		from T_SYS_USER U,T_SYS_USER_ROLE R 
+		where R.USERID = U.USERID 
+		<if test="roleCode != null and roleCode != ''">
+			and R.ROLECODE = #{roleCode,jdbcType=VARCHAR} 
+      	</if>
+		<if test="userName != null and userName != ''">
+			and U.USERNAME like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+      	</if>
+     	<if test="idOrAccount != null and idOrAccount != ''">
+			and (U.USERID = #{idOrAccount,jdbcType=VARCHAR} 
+				 or U.USERACCOUNT = #{idOrAccount,jdbcType=VARCHAR})
+     	</if>
+     	<if test="orgCode != null and orgCode != ''">
+			and U.ORGCODE = #{orgCode,jdbcType=VARCHAR}
+      	</if>
+      	<if test="orgs != null">
+			and U.ORGCODE in
+			<foreach collection="orgs" item="item" open="(" close=")"
+				separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+	    </if>
+      	<if test="isDisabled != null and isDisabled != ''">
+			and U.ISDISABLED = #{isDisabled,jdbcType=VARCHAR} 
+      	</if>
+      	<if test="roleCodes != null">
+			and R.ROLECODE in
+			<foreach collection="roleCodes" item="item" open="(" close=")"
+				separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+	    </if>
+	</sql>
+	
+	<select id="selectUserPageByRole" parameterType="hashmap" resultMap="UserResultMap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="User_Role_Column_List" />
+		<include refid="User_Page_In_Role" />
+     	<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+
+	<select id="selectUserPageByRoleCount" parameterType="hashmap" resultType="long">
+		select count(*) <include refid="User_Page_In_Role" />
+	</select>
+	
+	
+	<sql id="User_Page_NotIn_Role">
+		from T_SYS_USER U
+		where not exists 
+		(select * from T_SYS_USER_ROLE R 
+		where R.ROLECODE = #{roleCode,jdbcType=VARCHAR}
+		and U.USERID = R.USERID)
+		and U.ORGCODE = #{orgCode,jdbcType=VARCHAR}
+	</sql>	
+	
+	<select id="selectUserPageNotInRole" parameterType="hashmap" resultMap="UserResultMap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="User_Role_Column_List" />
+		<include refid="User_Page_NotIn_Role" />
+     	<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	
+	<select id="selectUserPageNotInRoleCount" parameterType="hashmap" resultType="long">
+		select count(*) <include refid="User_Page_NotIn_Role" />
+	</select>
+	
+	<!-- 角色根据区域过滤暂时屏蔽
+	<select id="selectUserByRole" parameterType="hashmap" resultMap="UserResultMap">
+		select
+		<include refid="User_Role_Column_List" />
+		from T_SYS_USER_ROLE R,T_SYS_USER U left join T_SYS_ORG O 
+		on U.ORGCODE = O.ORGCODE
+		where R.USERID = U.USERID 
+		and R.ROLECODE = #{roleCode,jdbcType=VARCHAR} 
+		<if test="area != null and area != ''">
+			and O.AREA = #{area,jdbcType=VARCHAR}
+      	</if>
+		<if test="orgs != null">
+			and U.ORGCODE in
+			<foreach collection="orgs" item="item" open="(" close=")"
+				separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+	    </if>
+	</select>
+	 -->
+
+</mapper>

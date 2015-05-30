@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Common Mapper -->
+<mapper namespace="OracleCommonMapper">
+	<!-- Paging Start -->
+	<sql id="PagingStart">
+		<if test="start != null and limit != null">
+			SELECT * FROM (SELECT rownum AS rn, t.* FROM( 
+		</if>
+	</sql>
+	
+	<!-- Paging End -->
+	<sql id="PagingEnd">
+		<if test="start != null and limit != null">
+		 	) t WHERE rownum &lt;= ${start}*(${limit}+1)) pgrs WHERE pgrs.rn &gt;= ${start}*${limit}+1
+		</if>
+	</sql>
+	
+	<!-- query result Sort information -->
+	<sql id="sortInfo">
+		<if test=" sort != null and sort != '' and dir != null and dir != ''">
+			ORDER BY ${sort} ${dir}
+		</if>
+	</sql>
+</mapper>

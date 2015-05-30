@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ProcessMapper">
+
+	<resultMap id="BaseResultMap" type="com.parrot.process.entity.Process">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="PID" property="pid" jdbcType="DECIMAL" />
+		<result column="FLOWTYPE" property="flowType" jdbcType="VARCHAR" />
+		<result column="ACTIVITY" property="activity" jdbcType="VARCHAR" />
+		<result column="FLOWSTATUS" property="flowStatus" jdbcType="VARCHAR" />
+		<result column="CREATER" property="creater" jdbcType="VARCHAR" />
+		<result column="CREATERNAME" property="createrName" jdbcType="VARCHAR" />
+		<result column="CREATETIME" property="createTime" jdbcType="VARCHAR" />
+		<result column="HANDLER" property="handler" jdbcType="VARCHAR" />
+		<result column="HANDLERTYPE" property="handlerType" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		W.ID,W.PID,W.FLOWTYPE,W.ACTIVITY,W.FLOWSTATUS,W.CREATER,W.CREATERNAME,
+		W.CREATETIME,W.HANDLER,W.HANDLERTYPE,W.PROVINCE
+  	</sql>
+	
+	<sql id="Pending_Clause">
+		((W.HANDLERTYPE = 'role' and W.HANDLER in 
+		<foreach collection="roleList" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>) 
+		OR (W.HANDLERTYPE = 'user' and W.HANDLER = #{userId,jdbcType=VARCHAR}))
+	</sql>
+	
+	<sql id="Where_Clause">
+		<if test="id != null">
+			AND W.ID = #{id,jdbcType=DECIMAL}
+   		</if>
+   		<if test="pid != null">
+			AND W.PID = #{pid,jdbcType=DECIMAL}
+   		</if>
+   		<if test="flowType != null and flowType != ''">
+			AND W.FLOWTYPE = #{flowType,jdbcType=VARCHAR}
+   		</if>
+   		<if test="province != null and province != ''">
+			AND W.PROVINCE = #{province,jdbcType=VARCHAR}
+   		</if>
+   		<if test="flowStatus != null and flowStatus != ''">
+			AND W.FLOWSTATUS = #{flowStatus,jdbcType=VARCHAR}
+   		</if>
+   		<if test="creater != null and creater != ''">
+			AND W.CREATER = #{creater,jdbcType=VARCHAR}
+   		</if>
+   		<if test="createrName != null and createrName != ''">
+			AND W.CREATERNAME like CONCAT('%',#{createrName,jdbcType=VARCHAR},'%')
+   		</if>
+   		<if test="startTime != null and startTime != ''">
+			AND W.CREATETIME &gt;= #{startTime,jdbcType=VARCHAR}
+    	</if>
+    	<if test="endTime != null and endTime != ''">
+			AND W.CREATETIME &lt;= #{endTime,jdbcType=VARCHAR}
+    	</if>
+	</sql>
+	
+	<!-- 
+	<select id="selectPage" parameterType="hashmap"
+		resultMap="BaseResultMap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="Base_Column_List" />
+		from T_WORKFLOW 
+		where <include refid="Pending_Clause" />
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	<select id="selectPageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*) from T_WORKFLOW 
+		where <include refid="Pending_Clause" />
+		<include refid="Where_Clause" />
+	</select>
+	 -->
+	
+	<select id="selectPage" parameterType="hashmap"
+		resultMap="BaseResultMap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="Base_Column_List" />,P.PROJECTNAME AS PNAME
+		from T_WORKFLOW W LEFT JOIN T_PROJECT_COST P ON W.PID = P.ID
+		where <include refid="Pending_Clause" />
+		<include refid="Where_Clause" />
+		AND W.FLOWTYPE = 'project'
+		<if test="pName != null and pName != ''">
+			AND P.PROJECTNAME like CONCAT('%',#{pName,jdbcType=VARCHAR},'%')
+    	</if>
+    	
+    	UNION 
+    	
+    	select
+		<include refid="Base_Column_List" />,R.RESEVERNAME AS PNAME
+		from T_WORKFLOW W LEFT JOIN T_RESEVER_COST R ON W.PID = R.ID
+		where <include refid="Pending_Clause" />
+		<include refid="Where_Clause" />
+		AND W.FLOWTYPE = 'resever'
+		<if test="pName != null and pName != ''">
+			AND R.RESEVERNAME like CONCAT('%',#{pName,jdbcType=VARCHAR},'%')
+    	</if>
+    	
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	<select id="selectPageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*) from (
+		
+		select
+		<include refid="Base_Column_List" />,P.PROJECTNAME AS PNAME
+		from T_WORKFLOW W LEFT JOIN T_PROJECT_COST P ON W.PID = P.ID
+		where <include refid="Pending_Clause" />
+		<include refid="Where_Clause" />
+		AND W.FLOWTYPE = 'project'
+		<if test="pName != null and pName != ''">
+			AND P.PROJECTNAME like CONCAT('%',#{pName,jdbcType=VARCHAR},'%')
+    	</if>
+    	
+    	UNION 
+    	
+    	select
+		<include refid="Base_Column_List" />,R.RESEVERNAME AS PNAME
+		from T_WORKFLOW W LEFT JOIN T_RESEVER_COST R ON W.PID = R.ID
+		where <include refid="Pending_Clause" />
+		<include refid="Where_Clause" /> 
+		AND W.FLOWTYPE = 'resever'
+		<if test="pName != null and pName != ''">
+			AND R.RESEVERNAME like CONCAT('%',#{pName,jdbcType=VARCHAR},'%')
+    	</if>
+		
+		
+		) AS N
+	</select>
+	
+	<select id="selectList" parameterType="hashmap"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_WORKFLOW W where 1=1 
+		<include refid="Where_Clause" />
+	</select>
+	
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" 
+		parameterType="com.parrot.process.entity.Process">
+		insert into T_WORKFLOW
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pid != null">PID,</if>
+			<if test="flowType != null and flowType != ''">FLOWTYPE,</if>
+			<if test="activity != null and activity != ''">ACTIVITY,</if>
+			<if test="flowStatus != null and flowStatus != ''">FLOWSTATUS,</if>
+			<if test="creater != null and creater != ''">CREATER,</if>
+			<if test="createrName != null and createrName != ''">CREATERNAME,</if>
+			<if test="createTime != null and createTime != ''">CREATETIME,</if>
+			<if test="handler != null and handler != ''">HANDLER,</if>
+			<if test="handlerType != null and handlerType != ''">HANDLERTYPE,</if>
+			<if test="province != null and province != ''">PROVINCE,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pid != null">#{pid,jdbcType=DECIMAL},</if>
+			<if test="flowType != null and flowType != ''">#{flowType,jdbcType=VARCHAR},</if>
+			<if test="activity != null and activity != ''">#{activity,jdbcType=VARCHAR},</if>
+			<if test="flowStatus != null and flowStatus != ''">#{flowStatus,jdbcType=VARCHAR},</if>
+			<if test="creater != null and creater != ''">#{creater,jdbcType=VARCHAR},</if>
+			<if test="createrName != null and createrName != ''">#{createrName,jdbcType=VARCHAR},</if>
+			<if test="createTime != null and createTime != ''">#{createTime,jdbcType=VARCHAR},</if>
+			<if test="handler != null and handler != ''">#{handler,jdbcType=VARCHAR},</if>
+			<if test="handlerType != null and handlerType != ''">#{handlerType,jdbcType=VARCHAR},</if>
+			<if test="province != null and province != ''">#{province,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="com.parrot.process.entity.Process">
+		update T_WORKFLOW
+		<set>
+			<if test="pid != null and pid != ''">PID = #{pid,jdbcType=DECIMAL},</if>
+			<if test="flowType != null and flowType != ''">FLOWTYPE = #{flowType,jdbcType=VARCHAR},</if>
+			<if test="activity != null and activity != ''">ACTIVITY = #{activity,jdbcType=VARCHAR},</if>
+			<if test="flowStatus != null and flowStatus != ''">FLOWSTATUS = #{flowStatus,jdbcType=VARCHAR},</if>
+			<if test="creater != null and creater != ''">CREATER = #{creater,jdbcType=VARCHAR},</if>
+			<if test="createrName != null and createrName != ''">CREATERNAME = #{createrName,jdbcType=VARCHAR},</if>
+			<if test="createTime != null and createTime != ''">CREATETIME = #{createTime,jdbcType=VARCHAR},</if>
+			<if test="handler != null and handler != ''">HANDLER = #{handler,jdbcType=VARCHAR},</if>
+			<if test="handlerType != null and handlerType != ''">HANDLERTYPE = #{handlerType,jdbcType=VARCHAR},</if>
+			<if test="province != null and province != ''">PROVINCE = #{province,jdbcType=VARCHAR},</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+	<delete id="delete">
+		delete from T_WORKFLOW where ID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=DECIMAL}
+		</foreach>
+	</delete>
+	
+	
+</mapper>

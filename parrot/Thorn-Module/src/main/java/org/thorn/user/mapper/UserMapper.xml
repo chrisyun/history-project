@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="UserMapper">
+	
+	<cache eviction="LRU" type="org.thorn.dao.mybatis.cache.CustomCache">
+		<property name="springBean" value="ehcacheService" />
+	</cache>
+	
+	<resultMap id="BaseResultMap" type="org.thorn.user.entity.User">
+		<id column="USERID" property="userId" jdbcType="VARCHAR" />
+		<result column="USERNAME" property="userName" jdbcType="VARCHAR" />
+		<result column="SN" property="sn" jdbcType="VARCHAR" />
+		<result column="USERACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+		<result column="USERPWD" property="userPwd" jdbcType="VARCHAR" />
+		<result column="GENDER" property="gender" jdbcType="VARCHAR" />
+		<result column="CUMAIL" property="cumail" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="ORGCODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="ORGNAME" property="orgName" jdbcType="VARCHAR" />
+		<result column="ORGTYPE" property="orgType" jdbcType="VARCHAR" />
+		<result column="DEFAULTROLE" property="defaultRole" jdbcType="VARCHAR" />
+		<result column="ISDISABLED" property="isDisabled" jdbcType="VARCHAR" />
+		<result column="ISSHOW" property="isShow" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+		<result column="SORTNUM" property="sortNum" jdbcType="DECIMAL" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		U.USERID, U.USERNAME, U.SN, U.USERACCOUNT,
+		U.USERPWD, U.GENDER, U.ORGCODE,
+		U.DEFAULTROLE, U.CUMAIL, U.PHONE,
+		U.ISDISABLED, U.ISSHOW, U.SORTNUM,
+		O.ORGNAME,O.AREA,O.ORGTYPE 
+  	</sql>
+  	
+	<sql id="Where_Clause">
+		<where>
+			<if test="userId != null and userId != ''">
+				and U.USERID = #{userId,jdbcType=VARCHAR}
+      		</if>
+      		<if test="idOrAccount != null and idOrAccount != ''">
+				and (U.USERID = #{idOrAccount,jdbcType=VARCHAR}
+					 or U.USERACCOUNT = #{idOrAccount,jdbcType=VARCHAR})
+      		</if>
+			<if test="userName != null and userName != ''">
+				and U.USERNAME like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+      		</if>
+			<if test="sn != null and sn != ''">
+				and U.SN = #{sn,jdbcType=VARCHAR}
+      		</if>
+			<if test="userAccount != null and userAccount != ''">
+				and U.USERACCOUNT = #{userAccount,jdbcType=VARCHAR}
+      		</if>
+			<if test="userPwd != null and userPwd != ''">
+				and U.USERPWD = #{userPwd,jdbcType=VARCHAR}
+      		</if>
+			<if test="gender != null and gender != ''">
+				and U.GENDER = #{gender,jdbcType=VARCHAR}
+      		</if>
+			<if test="cumail != null and cumail != ''">
+				and U.CUMAIL = #{cumail,jdbcType=VARCHAR}
+      		</if>
+			<if test="phone != null and phone != ''">
+				and U.PHONE = #{phone,jdbcType=VARCHAR}
+      		</if>
+			<if test="orgCode != null and orgCode != ''">
+				and U.ORGCODE = #{orgCode,jdbcType=VARCHAR}
+      		</if>
+      		<if test="area != null and area != ''">
+				and O.AREA = #{area,jdbcType=VARCHAR}
+      		</if>
+			<if test="isDisabled != null and isDisabled != ''">
+				and U.ISDISABLED = #{isDisabled,jdbcType=VARCHAR}
+      		</if>
+			<if test="isShow != null and isShow != ''">
+				and U.ISSHOW = #{isShow,jdbcType=VARCHAR}
+      		</if>
+			<if test="defaultRole != null and defaultRole != ''">
+				and U.DEFAULTROLE = #{defaultRole,jdbcType=VARCHAR}
+      		</if>
+      		<if test="areas != null">
+				and O.AREA in
+				<foreach collection="areas" item="item" open="(" close=")"
+					separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+      		</if>
+      		<if test="userIds != null">
+				and U.USERID in
+				<foreach collection="userIds" item="item" open="(" close=")"
+					separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+      		</if>
+      		<if test="orgs != null">
+				and U.ORGCODE in
+				<foreach collection="orgs" item="item" open="(" close=")"
+					separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+	    </if>
+		</where>
+	</sql>
+
+	<insert id="insert" parameterType="org.thorn.user.entity.User">
+		insert into T_SYS_USER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null and userId != ''">USERID,</if>
+			<if test="userName != null and userName != ''">USERNAME,</if>
+			<if test="sn != null and sn != ''">SN,</if>
+			<if test="userAccount != null and userAccount != ''">USERACCOUNT,</if>
+			<if test="userPwd != null and userPwd != ''">USERPWD,</if>
+			<if test="gender != null and gender != ''">GENDER,</if>
+			<if test="sortNum != null">SORTNUM,</if>
+			<if test="cumail != null and cumail != ''">CUMAIL,</if>
+			<if test="phone != null and phone != ''">PHONE,</if>
+			<if test="orgCode != null and orgCode != ''">ORGCODE,</if>
+			<if test="defaultRole != null and defaultRole != ''">DEFAULTROLE,</if>
+			<if test="isDisabled != null and isDisabled != ''">ISDISABLED,</if>
+			<if test="isShow != null and isShow != ''">ISSHOW,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null and userId != ''">#{userId,jdbcType=VARCHAR},</if>
+			<if test="userName != null and userName != ''">#{userName,jdbcType=VARCHAR},</if>
+			<if test="sn != null and sn != ''">#{sn,jdbcType=VARCHAR},</if>
+			<if test="userAccount != null and userAccount != ''">#{userAccount,jdbcType=VARCHAR},</if>
+			<if test="userPwd != null and userPwd != ''">#{userPwd,jdbcType=VARCHAR},</if>
+			<if test="gender != null and gender != ''">#{gender,jdbcType=VARCHAR},</if>
+			<if test="sortNum != null">#{sortNum,jdbcType=DECIMAL},</if>
+			<if test="cumail != null and cumail != ''">#{cumail,jdbcType=VARCHAR},</if>
+			<if test="phone != null and phone != ''">#{phone,jdbcType=VARCHAR},</if>
+			<if test="orgCode != null and orgCode != ''">#{orgCode,jdbcType=VARCHAR},</if>
+			<if test="defaultRole != null and defaultRole != ''">#{defaultRole,jdbcType=VARCHAR},</if>
+			<if test="isDisabled != null and isDisabled != ''">#{isDisabled,jdbcType=VARCHAR},</if>
+			<if test="isShow != null and isShow != ''">#{isShow,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="org.thorn.user.entity.User">
+		update T_SYS_USER
+		<set>
+			<if test="sortNum != null">SORTNUM = #{sortNum,jdbcType=DECIMAL},</if>
+			<if test="userName != null and userName != ''">USERNAME = #{userName,jdbcType=VARCHAR},</if>
+			<if test="sn != null and sn != ''">SN = #{sn,jdbcType=VARCHAR},</if>
+			<if test="userAccount != null and userAccount != ''">USERACCOUNT = #{userAccount,jdbcType=VARCHAR},</if>
+			<if test="userPwd != null and userPwd != ''">USERPWD = #{userPwd,jdbcType=VARCHAR},</if>
+			<if test="gender != null and gender != ''">GENDER = #{gender,jdbcType=VARCHAR},</if>
+			<if test="cumail != null and cumail != ''">CUMAIL = #{cumail,jdbcType=VARCHAR},</if>
+			<if test="phone != null and phone != ''">PHONE = #{phone,jdbcType=VARCHAR},</if>
+			<if test="orgCode != null and orgCode != ''">ORGCODE = #{orgCode,jdbcType=VARCHAR},</if>
+			<if test="defaultRole != null and defaultRole != ''">DEFAULTROLE = #{defaultRole,jdbcType=VARCHAR},</if>
+			<if test="isDisabled != null and isDisabled != ''">ISDISABLED = #{isDisabled,jdbcType=VARCHAR},</if>
+			<if test="isShow != null and isShow != ''">ISSHOW = #{isShow,jdbcType=VARCHAR},</if>
+		</set>
+		where USERID = #{userId,jdbcType=VARCHAR}
+	</update>
+	<delete id="delete">
+		delete from T_SYS_USER where USERID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<update id="disabled" parameterType="hashmap">
+		update T_SYS_USER set isDisabled = #{isDisabled,jdbcType=VARCHAR} 
+		where  USERID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="hashmap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_USER U left join T_SYS_ORG O 
+		on U.ORGCODE = O.ORGCODE
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	
+	<select id="selectPageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*) from T_SYS_USER U left join T_SYS_ORG O 
+		on U.ORGCODE = O.ORGCODE
+		<include refid="Where_Clause" />
+	</select>
+	
+</mapper>

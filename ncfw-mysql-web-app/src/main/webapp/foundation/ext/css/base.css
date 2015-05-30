@@ -1,0 +1,8 @@
+.required {font:0.8em Verdana !important;color:#f68622; margin-top: 120px;}
+.float_left{float: left}
+.allow_float {clear:none!important;} 
+.link{font-color: #4682B4;}
+.x-date-middle {      
+    padding-top:2px;padding-bottom:2px;      
+    width:130px; /* FF3 */     
+}

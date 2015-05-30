@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	
+  	<display-name>ncfw-mysql-webapp</display-name>
+  
+  	<!-- 应用路径 -->
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>ncfw.root</param-value>
+	</context-param>
+	
+	<!-- 字符集 过滤器  -->
+	<filter>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<!--Spring上下文 配置 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext-*.xml</param-value>
+	</context-param>
+	 
+	<!-- Spring security Filter -->
+	
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter>
+		<filter-name>addHeaderFilter</filter-name>
+		<filter-class>com.talkweb.ncframework.pub.web.common.filter.AddHeaderFilter</filter-class>
+		<init-param>
+			<param-name>headers</param-name>
+			<param-value>Content-Encoding=gzip</param-value>
+		</init-param>
+	</filter>
+	
+	<!-- struts2配置 -->
+	<filter>
+		<filter-name>struts-cleanup</filter-name>
+		<filter-class>
+			org.apache.struts2.dispatcher.ActionContextCleanUp
+		</filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>struts2</filter-name>
+		<filter-class>
+			org.apache.struts2.dispatcher.FilterDispatcher
+		</filter-class>
+	</filter>
+	
+	<filter>  
+        <filter-name>jcaptchaFilter</filter-name>  
+        <filter-class>com.talkweb.security.SimpleImageValidateCodeFilter</filter-class>  
+        <init-param>  
+            <param-name>failureUrl</param-name>  
+            <param-value>/login.jsp?error=2</param-value>
+        </init-param>  
+    </filter>
+    
+	<!-- jcaptcha图片生成URL. -->  
+    <filter-mapping>  
+        <filter-name>jcaptchaFilter</filter-name>  
+        <url-pattern>/security/jcaptcha</url-pattern>  
+    </filter-mapping>  
+	
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>addHeaderFilter</filter-name>
+		<url-pattern>*.jsgz</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>addHeaderFilter</filter-name>
+		<url-pattern>*.cssgz</url-pattern>
+	</filter-mapping>
+	
+	<!-- struts2 filter mapping -->
+	<filter-mapping>
+		<filter-name>struts-cleanup</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>struts-cleanup</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	
+	
+	<!-- Spring 监听器  -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	 
+	<!-- Spring 刷新Introspector防止内存泄露 -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	
+	<!-- session 配置 -->
+	<session-config>
+		<!-- session 失效时间 50分钟 -->
+		<session-timeout>50</session-timeout>
+	</session-config>
+	
+
+	<welcome-file-list>
+		<welcome-file>/login.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

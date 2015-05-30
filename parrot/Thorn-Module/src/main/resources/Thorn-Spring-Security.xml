@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/security
+http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+	
+	<!-- 目的使用security标签时采用自定义的filter -->
+	<beans:bean class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
+		<beans:constructor-arg index="0" ref="permissionFilter" />
+	</beans:bean>
+	
+	<http entry-point-ref="authenticationProcessingFilterEntryPoint">
+		<intercept-url pattern="/reference/**" filters="none" />
+		<intercept-url pattern="/resources/**" filters="none" />
+		<intercept-url pattern="/plugins/**" filters="none" />
+		<intercept-url pattern="/user/findBack*.jmt" filters="none" />
+		<intercept-url pattern="/Alert**" filters="none" />
+		<intercept-url pattern="/login.jsp*" filters="none" />
+		<intercept-url pattern="/**/*.js" filters="none" />
+		
+		<!-- 检测失效的sessionId,超时时定位到另外一个URL -->
+		<session-management invalid-session-url="/AlertTimeOut.jsp">
+			<!-- 第二次登录将被阻止error-if-maximum-exceeded="true" -->
+			<!-- 第二次登录会让第一次登录失效 -->
+			<concurrency-control max-sessions="1" />
+		</session-management>
+
+		<!-- 自定义权限认证失败的处理类 -->
+		<access-denied-handler ref="accessDeniedHandler" />
+
+		<!-- logout需要清除cookie及数据库信息，必须配置rememberme节点 -->
+		<remember-me data-source-ref="dataSource-jdbc" />
+		<logout logout-success-url="/login.jsp" invalidate-session="true" />
+
+		<custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER" />
+		<custom-filter ref="permissionFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+		<custom-filter ref="rememberMeFilter" after="PRE_AUTH_FILTER" />
+	</http>
+
+	<!-- ************************************************* -->
+	<!-- 认证管理器\用户数据供应器\资源映射供应器\访问决策器 -->
+	<!-- security -->
+	<!-- ************************************************* -->
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref='userDetailsService'>
+			<password-encoder ref="passwordEncoder">
+				<salt-source user-property="username" />
+			</password-encoder>
+		</authentication-provider>
+		<authentication-provider ref='rememberMeAuthProvider' />
+	</authentication-manager>
+	<beans:bean id="userDetailsService"
+		class="org.thorn.security.UserSecurityDetailsService">
+	</beans:bean>
+	<beans:bean id="securityMetadataSource"
+		class="org.thorn.security.InvocationSecurityMetadataSource">
+		<beans:constructor-arg index="0" ref="resourceService" />
+		<beans:constructor-arg index="1" ref="authService" />
+	</beans:bean>
+	<beans:bean id="accessDecisionManager"
+		class="org.thorn.security.CoreAccessDecisionManager" />
+	<beans:bean
+		class="org.springframework.security.authentication.event.LoggerListener" />
+	<!-- ************************************************* -->
+	<!-- -->
+	<!-- ************************************************* -->
+
+	<!-- ************************************************* -->
+	<!-- 权限过滤器 -->
+	<!-- ************************************************* -->
+	<beans:bean id="permissionFilter"
+		class="org.thorn.security.filter.FilterSecurityInterceptor">
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="accessDecisionManager" ref="accessDecisionManager" />
+		<beans:property name="securityMetadataSource" ref="securityMetadataSource" />
+	</beans:bean>
+	<!-- ************************************************* -->
+	<!-- 自定义登陆过滤器 ，用户名\密码\验证码\COOKIE -->
+	<!-- ************************************************* -->
+	<beans:bean id="loginFilter"
+		class="org.thorn.security.filter.LoginAuthWithCodeFilter">
+		<beans:property name="authenticationSuccessHandler"
+			ref="loginSuccessHandler" />
+		<beans:property name="authenticationFailureHandler"
+			ref="loginFailureHandler" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="rememberMeServices" ref="rememberMeServices" />
+	</beans:bean>
+	<beans:bean id="loginSuccessHandler"
+		class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+		<beans:property name="defaultTargetUrl" value="/system/main.jsp" />
+		<beans:property name="alwaysUseDefaultTargetUrl" value="true" />
+	</beans:bean>
+	<beans:bean id="loginFailureHandler"
+		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+		<beans:property name="defaultFailureUrl" value="/login.jsp?error=true"></beans:property>
+	</beans:bean>
+	<!-- ************************************************* -->
+	<!-- REMEMBER-ME filter -->
+	<!-- ************************************************* -->
+	<beans:bean id="rememberMeFilter"
+		class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+		<beans:property name="rememberMeServices" ref="rememberMeServices" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
+	<beans:bean id="rememberMeServices"
+		class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
+		<beans:property name="userDetailsService" ref="userDetailsService" />
+		<beans:property name="key" value="thorn" />
+		<beans:property name="tokenValiditySeconds" value="1209600" />
+		<beans:property name="tokenRepository" ref="tokenRepository" />
+	</beans:bean>
+	<beans:bean id="tokenRepository"
+		class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">
+		<beans:property name="dataSource" ref="dataSource-jdbc" />
+	</beans:bean>
+	<beans:bean id="rememberMeAuthProvider"
+		class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+		<beans:property name="key" value="thorn" />
+	</beans:bean>
+
+
+	<beans:bean id="accessDeniedHandler"
+		class="org.thorn.security.AccessDeniedWithJsonAndJspHandler" >
+		<beans:property name="errorPage" value="/AlertAccessDenied.jsp"/>
+	</beans:bean>
+
+	<beans:bean id="authenticationProcessingFilterEntryPoint"
+		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/login.jsp"></beans:property>
+	</beans:bean>
+
+	<!-- ************************************************* -->
+	<!-- springbean service -->
+	<!-- ************************************************* -->
+	<beans:bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<beans:property name="basename" value="classpath:messages_local_CN" />
+	</beans:bean>
+
+	<beans:bean id="userSecurityCache"
+		class="org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache">
+		<beans:property name="cache" ref="securityCache" />
+	</beans:bean>
+	<beans:bean id="securityCache"
+		class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<beans:property name="cacheName" value="securityCache" />
+		<beans:property name="cacheManager" ref="cacheManager" />
+	</beans:bean>
+
+	<beans:bean id="passwordEncoder"
+		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+	<!-- ************************************************* -->
+	<!-- springbean service -->
+	<!-- ************************************************* -->
+</beans:beans>
+

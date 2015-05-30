@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/mvc    http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- 自动扫描的包名 -->
+	<context:component-scan base-package="org.thorn" />
+	<!-- 默认的注解映射的支持 -->
+	<mvc:annotation-driven />
+	
+	<!-- 开启基于aspectj注解的代理，并使用cglib的方式-->
+	<aop:aspectj-autoproxy proxy-target-class="true" /> 
+	<bean class="org.thorn.log.AppLogAdvisor" />
+	
+	
+	<bean id="roleDao" class="org.thorn.role.dao.RoleDaoImpl" />
+	<bean id="roleService" class="org.thorn.role.service.RoleServiceImpl" />
+
+	<bean id="resourceDao" class="org.thorn.resource.dao.ResourceDaoImpl" />
+	<bean id="resourceService" class="org.thorn.resource.service.ResourceServiceImpl" />
+
+	<bean id="userDao" class="org.thorn.user.dao.UserDaoImpl" />
+	<bean id="userService" class="org.thorn.user.service.UserServiceImpl" />
+	
+	<bean id="ddDao" class="org.thorn.dd.dao.DataDictDaoImpl" />
+	<bean id="ddService" class="org.thorn.dd.service.DataDictServiceImpl" />
+	
+	<bean id="orgDao" class="org.thorn.org.dao.OrgDaoImpl" />
+	<bean id="orgService" class="org.thorn.org.service.OrgServiceImpl" />
+	
+	<bean id="authDao" class="org.thorn.auth.dao.AuthDaoImpl" />
+	<bean id="authService" class="org.thorn.auth.service.AuthServiceImpl" />
+	
+	<bean id="logDao" class="org.thorn.log.dao.AppLogDaoImpl" />
+	<bean id="logService" class="org.thorn.log.service.AppLogServiceImpl" />
+	
+	<bean id="attDao" class="org.thorn.attachment.dao.AttachmentDaoImpl" />
+	<!-- <bean id="attService" class="org.thorn.attachment.service.AttachmentDBServiceImpl" /> -->
+	<bean id="attService" class="org.thorn.attachment.service.AttachmentLocalServiceImpl">
+		<property name="savePath" value="C:\Program Files\Tomcat 6.0\webapps\download\" />
+		<property name="httpPath" value="http://114.255.59.52:8080/download" />
+	</bean>
+	
+	
+	
+	<bean id="mailHelper" class="org.thorn.core.jmail.MailHelper">
+		<property name="userName" value="${mail.user}" />
+		<property name="password" value="${mail.password}" />
+		<property name="smtpHost" value="${mail.smtp}" />
+		<property name="sender">
+			<bean class="org.thorn.core.jmail.MailCard">
+				<property name="eMail" value="${mail.email}" />
+				<property name="name" value="${mail.name}" />
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="mailConfigListener" class="org.thorn.configurator.listeners.MailConfiguratorListener">
+		<property name="configName" value="mail-config.xml"/>
+	</bean>
+	<bean id="configuratorService" class="org.thorn.configurator.service.ConfiguratorService">
+		<constructor-arg index="0">
+			<list>
+				<ref bean="mailConfigListener"/>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="incrSequence"
+		class="org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer">
+		<property name="columnName" value="ACCOUNTSEQ" />
+		<property name="cacheSize" value="10" />
+		<property name="dataSource" ref="dataSource-jdbc" />
+		<property name="incrementerName" value="T_INCR_SEQ" />
+	</bean>
+	
+</beans>

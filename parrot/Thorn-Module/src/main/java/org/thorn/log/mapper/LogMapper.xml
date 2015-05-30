@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="LogMapper">
+
+	<resultMap id="BaseResultMap" type="org.thorn.log.entity.AppLog">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="MODULENAME" property="moduleName" jdbcType="VARCHAR" />
+		<result column="METHODNAME" property="methodName" jdbcType="VARCHAR" />
+		<result column="PARAMETERS" property="parameters" jdbcType="VARCHAR" />
+		<result column="USERID" property="userId" jdbcType="VARCHAR" />
+		<result column="HANDLERESULT" property="handleResult" jdbcType="VARCHAR" />
+		<result column="ERRORMSG" property="errorMsg" jdbcType="VARCHAR" />
+		<result column="EXECUTETIME" property="executeTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		l.ID,l.MODULENAME,l.METHODNAME,l.PARAMETERS,
+		l.USERID,l.HANDLERESULT,l.ERRORMSG,l.EXECUTETIME
+	</sql>
+
+	<sql id="Where_Clause">
+		<where>
+      		<if test="moduleName != null and moduleName != ''">
+				and l.MODULENAME = #{moduleName,jdbcType=VARCHAR}
+      		</if>
+      		<if test="handleResult != null and handleResult != ''">
+				and l.HANDLERESULT = #{handleResult,jdbcType=VARCHAR}
+      		</if>
+      		<if test="startTime != null and startTime != ''">
+				and l.EXECUTETIME &gt;= #{startTime,jdbcType=VARCHAR}
+      		</if>
+      		<if test="endTime != null and endTime != ''">
+				and l.EXECUTETIME &lt; #{endTime,jdbcType=VARCHAR}
+      		</if>
+		</where>
+	</sql>
+
+	<insert id="insert" parameterType="org.thorn.log.entity.AppLog">
+		insert into T_SYS_LOG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="moduleName != null and moduleName != ''">MODULENAME,</if>
+			<if test="methodName != null and methodName != ''">METHODNAME,</if>
+			<if test="parameters != null and parameters != ''">PARAMETERS,</if>
+			<if test="userId != null and userId != ''">USERID,</if>
+			<if test="handleResult != null and handleResult != ''">HANDLERESULT,</if>
+			<if test="errorMsg != null and errorMsg != ''">ERRORMSG,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="moduleName != null and moduleName != ''">#{moduleName,jdbcType=VARCHAR},</if>
+			<if test="methodName != null and methodName != ''">#{methodName,jdbcType=VARCHAR},</if>
+			<if test="parameters != null and parameters != ''">#{parameters,jdbcType=VARCHAR},</if>
+			<if test="userId != null and userId != ''">#{userId,jdbcType=VARCHAR},</if>
+			<if test="handleResult != null and handleResult != ''">#{handleResult,jdbcType=BOOLEAN},</if>
+			<if test="errorMsg != null and errorMsg != ''">#{errorMsg,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+
+	<select id="selectPage" resultMap="BaseResultMap" parameterType="hashmap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_LOG l
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	
+	<select id="selectPageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*) from T_SYS_LOG l
+		<include refid="Where_Clause" />
+	</select>
+
+</mapper>

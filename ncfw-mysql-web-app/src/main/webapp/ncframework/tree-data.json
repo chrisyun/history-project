@@ -1,0 +1,85 @@
+[{
+    text:'系统管理',
+    expanded: false,
+    id: 'system-manage',
+    leaf: false,
+    children:[{
+        text:'数据字典管理',
+        id:'dict-manage',
+        leaf: true,
+		action:'ncframework/datadict/dictionary.jsp',
+		hrefTarget:'x-workspace'
+    },{
+        text:'系统操作日志',
+        id:'sysOperateLog-manage',
+        leaf:true,
+		action:'ncframework/log/listSysOperateLog.jsp',
+		hrefTarget:'x-workspace'
+    }]
+},{
+    text:'积分王管理',
+    expanded: false,
+    id: 'choose-manage',
+    leaf: false,
+    children:[{
+        text:'短信模板管理',
+        id:'smsmode',
+        leaf:true,
+		action:'business/smsmode.jsp',
+		hrefTarget:'x-workspace'
+    },{
+        text:'业务套餐管理',
+        id:'servicepackage',
+        leaf:true,
+		action:'business/servicepackage/servicePackage.jsp',
+		hrefTarget:'x-workspace'
+    },{
+        text:'套餐辅助管理',
+        id:'serviceassistant',
+        leaf:true,
+		action:'business/servicepackage/serviceAssistant.jsp',
+		hrefTarget:'x-workspace'
+    },{
+        text:'短信审核',
+        id:'checksms',
+        leaf:true,
+		action:'business/servicepackage/smscheck.jsp',
+		hrefTarget:'x-workspace'
+    },{
+        text:'PUSH规则管理',
+        id:'pushrule',
+        leaf:true,
+		action:'business/servicepackage/pushRule.jsp',
+		hrefTarget:'x-workspace'
+    },{
+        text:'奖项管理',
+        id:'awardman',
+        leaf:true,
+		action:'business/award.jsp',
+		hrefTarget:'x-workspace'
+    },{
+        text:'奖项设置',
+        id:'prizeset',
+        leaf:true,
+		action:'business/prizeset.jsp',
+		hrefTarget:'x-workspace'
+    }]
+},{
+    text:'用户管理',
+    expanded: false,
+    id: 'user-manages',
+    leaf: false,
+    children:[{
+        text:'用户管理',
+        id:'user-manage',
+        leaf:true,
+		action: 'business/user/user.jsp',
+		hrefTarget:'x-workspace'
+    },{
+        text:'密码修改',
+        id:'changepwd-manage',
+        leaf:true,
+		action: 'business/user/changepwd.jsp',
+		hrefTarget:'x-workspace'
+    }]
+}]

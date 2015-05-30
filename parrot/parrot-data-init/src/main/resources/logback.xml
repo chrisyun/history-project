@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 设置为true如果配置文件发生改变会重新加载，默认为true -->
+<!-- 设置监测配置文件是否有修改的时间间隔，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<!-- 设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false -->
+<configuration scan="false" scanPeriod="60 seconds" debug="false">
+	<!-- 设置上下文名称 -->
+	<contextName>parrot</contextName>
+
+	<!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
+	<!-- 变量定义 -->
+	<property name="LOG_HOME" value="d:/parrot_data_log" />
+
+	<!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- 日志输出编码 -->
+		<Encoding>UTF-8</Encoding>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名， %-5level：级别从左显示5个字符宽度 %logger{50}带参数为了缩短logger名 
+				%msg：日志消息，%n是换行符  %contextName上下文名称-->
+			<pattern>[%contextName] %d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+		</layout>
+	</appender>
+
+	<!-- 滚动文件的日志生成方式 -->
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+		<!-- 另外一种方式 -->
+		<encoder charset="UTF-8">
+			<pattern>[%contextName] %d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+		</encoder>
+		
+		<!-- 不支持TimeBasedRollingPolicy -->
+		<prudent>true</prudent>
+		
+		<!-- TimeBasedRollingPolicy根据时间进行滚动，自动进行滚动 -->
+		<!-- 不支持文件压缩，不能设置file属性 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名 -->
+			<FileNamePattern>${LOG_HOME}/parrot.log.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<!-- 控制保留的归档文件的最大数量，如30则保留最近30天的文件 -->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+
+	</appender>
+	
+	<!-- HTTP访问日志的appender -->
+   <appender name="CYCLIC"
+            class="ch.qos.logback.core.read.CyclicBufferAppender"> 
+     <MaxSize>100</MaxSize>
+  </appender>
+
+
+	<!-- 日志输出级别 ，最多一个root-->
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="CYCLIC" /> 
+	</root>
+
+	<!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->
+	<logger name="org.hibernate" level="WARN" />
+	<logger name="org.springframework" level="WARN" />
+	<logger name="com.opensymphony" level="WARN" />
+	<logger name="org.apache" level="WARN" />
+
+	<!-- show parameters for hibernate sql 专为 Hibernate 定制 -->
+	<logger name="org.hibernate.type.descriptor.sql.BasicBinder"
+		level="TRACE" />
+	<logger name="org.hibernate.type.descriptor.sql.BasicExtractor"
+		level="DEBUG" />
+	<logger name="org.hibernate.SQL" level="DEBUG" />
+	<logger name="org.hibernate.engine.QueryParameters" level="DEBUG" />
+	<logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG" />
+
+</configuration>

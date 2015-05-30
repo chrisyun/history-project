@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="HeritorMapper">
+
+	<resultMap id="BaseResultMap" type="com.parrot.app.entity.Heritor">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="IDCARD" property="idCard" jdbcType="VARCHAR" />
+		<result column="GENDER" property="gender" jdbcType="VARCHAR" />
+		<result column="BATCHNUM" property="batchNum" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="ISDIE" property="isDie" jdbcType="VARCHAR" />
+		<result column="DIEDATE" property="dieDate" jdbcType="VARCHAR" />
+		<result column="PROJECTID" property="projectId" jdbcType="DECIMAL" />
+		<result column="PROJECTNAME" property="projectName" jdbcType="VARCHAR" />
+		<result column="PROJECTCODE" property="projectCode" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="BIRTHDATE" property="birthDate" jdbcType="VARCHAR" />
+		<result column="MINORITY" property="minority" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		H.ID,H.NAME,H.IDCARD,H.GENDER,H.BATCHNUM,H.REMARK,H.PROVINCE,
+		H.ISDIE,H.DIEDATE,H.PROJECTID,P.NAME AS PROJECTNAME,P.CODE AS PROJECTCODE,
+		H.BIRTHDATE,H.MINORITY
+  	</sql>
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="name != null and name != ''">
+				and H.NAME like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+      		</if>
+      		<if test="projectName != null and projectName != ''">
+				and P.NAME like CONCAT('%',#{projectName,jdbcType=VARCHAR},'%')
+      		</if>
+      		<if test="batchNum != null and batchNum != ''">
+				and H.BATCHNUM like CONCAT('%',#{batchNum,jdbcType=VARCHAR},'%')
+      		</if>
+			<if test="id != null">
+				AND H.ID = #{id,jdbcType=DECIMAL}
+      		</if>
+      		<if test="projectId != null">
+				AND H.PROJECTID = #{projectId,jdbcType=DECIMAL}
+      		</if>
+			<if test="isDie != null and isDie != ''">
+				AND H.ISDIE = #{isDie,jdbcType=VARCHAR}
+      		</if>
+      		<if test="gender != null and gender != ''">
+				AND H.GENDER = #{gender,jdbcType=VARCHAR}
+      		</if>
+      		<if test="minority != null and minority != ''">
+				AND H.MINORITY = #{minority,jdbcType=VARCHAR}
+      		</if>
+      		<if test="province != null and province != ''">
+				AND H.PROVINCE = #{province,jdbcType=VARCHAR}
+      		</if>
+		</where>
+	</sql>
+
+	<insert id="insert" parameterType="com.parrot.app.entity.Heritor">
+		insert into T_HERITOR
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">NAME,</if>
+			<if test="idCard != null and idCard != ''">IDCARD,</if>
+			<if test="gender != null and gender != ''">GENDER,</if>
+			<if test="batchNum != null and batchNum != ''">BATCHNUM,</if>
+			<if test="remark != null and remark != ''">REMARK,</if>
+			<if test="isDie != null and isDie != ''">ISDIE,</if>
+			<if test="dieDate != null and dieDate != ''">DIEDATE,</if>
+			<if test="projectId != null and projectId != ''">PROJECTID,</if>
+			<if test="province != null and province != ''">PROVINCE,</if>
+			<if test="birthDate != null and birthDate != ''">BIRTHDATE,</if>
+			<if test="minority != null and minority != ''">MINORITY,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">#{name,jdbcType=VARCHAR},</if>
+			<if test="idCard != null and idCard != ''">#{idCard,jdbcType=VARCHAR},</if>
+			<if test="gender != null and gender != ''">#{gender,jdbcType=VARCHAR},</if>
+			<if test="batchNum != null and batchNum != ''">#{batchNum,jdbcType=VARCHAR},</if>
+			<if test="remark != null and remark != ''">#{remark,jdbcType=VARCHAR},</if>
+			<if test="isDie != null and isDie != ''">#{isDie,jdbcType=VARCHAR},</if>
+			<if test="dieDate != null and dieDate != ''">#{dieDate,jdbcType=VARCHAR},</if>
+			<if test="projectId != null and projectId != ''">#{projectId,jdbcType=DECIMAL},</if>
+			<if test="province != null and province != ''">#{province,jdbcType=VARCHAR},</if>
+			<if test="birthDate != null and birthDate != ''">#{birthDate,jdbcType=VARCHAR},</if>
+			<if test="minority != null and minority != ''">#{minority,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="com.parrot.app.entity.Heritor">
+		update T_HERITOR
+		<set>
+			<if test="name != null and name != ''">NAME = #{name,jdbcType=VARCHAR},</if>
+			<if test="idCard != null and idCard != ''">IDCARD = #{idCard,jdbcType=VARCHAR},</if>
+			<if test="gender != null and gender != ''">GENDER = #{gender,jdbcType=VARCHAR},</if>
+			<if test="batchNum != null and batchNum != ''">BATCHNUM = #{batchNum,jdbcType=VARCHAR},</if>
+			<if test="remark != null and remark != ''">REMARK = #{remark,jdbcType=VARCHAR},</if>
+			<if test="isDie != null and isDie != ''">ISDIE = #{isDie,jdbcType=VARCHAR},</if>
+			<if test="dieDate != null and dieDate != ''">DIEDATE = #{dieDate,jdbcType=VARCHAR},</if>
+			<if test="projectId != null and projectId != ''">PROJECTID = #{projectId,jdbcType=DECIMAL},</if>
+			<if test="province != null and province != ''">PROVINCE = #{province,jdbcType=VARCHAR},</if>
+			<if test="birthDate != null and birthDate != ''">BIRTHDATE = #{birthDate,jdbcType=VARCHAR},</if>
+			<if test="minority != null and minority != ''">MINORITY = #{minority,jdbcType=VARCHAR},</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+	<update id="updateProject" parameterType="hashmap">
+		update T_HERITOR set PROJECTID = #{projectId,jdbcType=DECIMAL} 
+		where ID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=DECIMAL}
+		</foreach> 
+	</update>
+	<update id="updateProjectNo" parameterType="hashmap">
+		update T_HERITOR set PROJECTID = null 
+		where PROJECTID = #{projectId,jdbcType=DECIMAL} and ID not in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=DECIMAL}
+		</foreach> 
+	</update>
+	
+	<delete id="delete">
+		delete from T_HERITOR where ID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=DECIMAL}
+		</foreach>
+	</delete>
+	
+	<select id="selectPage" parameterType="hashmap"
+		resultMap="BaseResultMap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="Base_Column_List" />
+		from T_HERITOR H left join T_PROJECT P on P.ID = H.PROJECTID 
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	<select id="selectPageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*) from T_HERITOR H left join T_PROJECT P on P.ID = H.PROJECTID 
+		<include refid="Where_Clause" />
+	</select>
+
+</mapper>

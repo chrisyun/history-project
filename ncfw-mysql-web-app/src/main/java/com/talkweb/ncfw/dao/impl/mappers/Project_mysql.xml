@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Question Mappper -->
+<mapper namespace="ProjectMapper">
+	<insert id="insert" parameterType="com.talkweb.ncfw.entity.Project">
+		insert into t_project (
+		   		pid
+		   <if test="pname != null and pname != ''">
+		   		,pname
+		   </if>
+		   <if test="pmtype != null and pmtype != ''">
+		   		,pmtype
+		   </if>
+		   <if test="pstatus != null and pstatus != ''">
+		   		,pstatus
+		   </if>
+		   <if test="spstatus != null and spstatus != ''">
+		   		,spstatus
+		   </if>
+		   <if test="creater != null and creater != ''">
+		   		,creater
+		   </if>
+		   <if test="pmanager != null and pmanager != ''">
+		   		,pmanager
+		   </if>
+		   <if test="tel != null and tel != ''">
+		   		,tel
+		   </if>
+		   <if test="email != null and email != ''">
+		   		,email
+		   </if>
+		   <if test="psecret != null and psecret != ''">
+		  		,psecret
+		   </if>
+		   <if test="pslnumber != null and pslnumber != ''">
+		   		,pslnumber
+		   </if>
+		   <if test="plxnumber != null and plxnumber != ''">
+		   		,plxnumber
+		   </if>
+		   <if test="psbtype != null and psbtype != ''">
+		   		,psbtype
+		   </if>
+		   <if test="ptype != null and ptype != ''">
+		   		,ptype
+		   </if>
+		   <if test="cdorg != null and cdorg != ''">
+		   		,cdorg
+		   </if>
+		   <if test="sborg != null and sborg != ''">
+		   		,sborg
+		   </if>
+		   <if test="sbdate != null and sbdate != ''">
+		   		,sbdate
+		   </if>
+		   <if test="gjorg != null and gjorg != ''">
+		   		,gjorg
+		   </if>
+		   <if test="jsorg != null and jsorg != ''">
+		   		,jsorg
+		   </if>
+		   <if test="hyorg != null and hyorg != ''">
+		   		,hyorg
+		   </if>
+		   <if test="tjorg != null and tjorg != ''">
+		   		,tjorg
+		   </if>
+		   <if test="proprovincecode != null and proprovincecode != ''">
+		   		,proprovincecode
+		   </if>
+		   <if test="handleType != null and handleType != ''">
+		   		,handleType
+		   </if>
+		   <if test="handler != null and handler != ''">
+		   		,handler
+		   </if>
+		   <if test="curActivityName != null and curActivityName != ''">
+		   		,curActivityName
+		   </if>
+		   <if test="creattime != null and creattime != ''">
+		   		,creattime
+		   </if>
+		   <if test="handlerlimit != null and handlerlimit != ''">
+		   		,handlerlimit
+		   </if>
+		   <if test="isInput != null and isInput != ''">
+		   		,isInput
+		   </if>
+		   <if test="pwtype != null and pwtype != ''">
+		   		,pwtype
+		   </if>
+		) values (
+		  		#{pid}
+		  <if test="pname != null and pname != ''">
+		   		,#{pname}
+		   </if>
+		   <if test="pmtype != null and pmtype != ''">
+		   		,#{pmtype}
+		   </if>
+		   <if test="pstatus != null and pstatus != ''">
+		   		,#{pstatus}
+		   </if>
+		   <if test="spstatus != null and spstatus != ''">
+		   		,#{spstatus}
+		   </if>
+		   <if test="creater != null and creater != ''">
+		   		,#{creater}
+		   </if>
+		   <if test="pmanager != null and pmanager != ''">
+		   		,#{pmanager}
+		   </if>
+		   <if test="tel != null and tel != ''">
+		   		,#{tel}
+		   </if>
+		   <if test="email != null and email != ''">
+		   		,#{email}
+		   </if>
+		   <if test="psecret != null and psecret != ''">
+		  		,#{psecret}
+		   </if>
+		   <if test="pslnumber != null and pslnumber != ''">
+		   		,#{pslnumber}
+		   </if>
+		   <if test="plxnumber != null and plxnumber != ''">
+		   		,#{plxnumber}
+		   </if>
+		   <if test="psbtype != null and psbtype != ''">
+		   		,#{psbtype}
+		   </if>
+		   <if test="ptype != null and ptype != ''">
+		   		,#{ptype}
+		   </if>
+		   <if test="cdorg != null and cdorg != ''">
+		   		,#{cdorg}
+		   </if>
+		   <if test="sborg != null and sborg != ''">
+		   		,#{sborg}
+		   </if>
+		   <if test="sbdate != null and sbdate != ''">
+		   		,#{sbdate}
+		   </if>
+		   <if test="gjorg != null and gjorg != ''">
+		   		,#{gjorg}
+		   </if>
+		   <if test="jsorg != null and jsorg != ''">
+		   		,#{jsorg}
+		   </if>
+		   <if test="hyorg != null and hyorg != ''">
+		   		,#{hyorg}
+		   </if>
+		   <if test="tjorg != null and tjorg != ''">
+		   		,#{tjorg}
+		   </if>
+		   <if test="proprovincecode != null and proprovincecode != ''">
+		   		,#{proprovincecode}
+		   </if>
+		   <if test="handleType != null and handleType != ''">
+		   		,#{handleType}
+		   </if>
+		   <if test="handler != null and handler != ''">
+		   		,#{handler}
+		   </if>
+		   <if test="curActivityName != null and curActivityName != ''">
+		   		,#{curActivityName}
+		   </if>
+		   <if test="creattime != null and creattime != ''">
+		   		,#{creattime}
+		   </if>
+		   <if test="handlerlimit != null and handlerlimit != ''">
+		   		,#{handlerlimit}
+		   </if>
+		   <if test="isInput != null and isInput != ''">
+		   		,#{isInput}
+		   </if>
+		   <if test="pwtype != null and pwtype != ''">
+		   		,#{pwtype}
+		   </if>
+		   )
+	</insert>
+	
+	<update id="update" parameterType="com.talkweb.ncfw.entity.Project">
+		update t_project 
+		<trim prefix="SET" suffixOverrides=",">
+		   <if test="pname != null and pname != ''">
+		   		pname = #{pname},
+		   </if>
+		   <if test="pstatus != null and pstatus != ''">
+		   		pstatus = #{pstatus},
+		   </if>
+		   <if test="spstatus != null and spstatus != ''">
+		   		spstatus = #{spstatus},
+		   </if>
+		   <if test="pmanager != null and pmanager != ''">
+		   		pmanager = #{pmanager},
+		   </if>
+		   <if test="tel != null and tel != ''">
+		   		tel = #{tel},
+		   </if>
+		   <if test="email != null and email != ''">
+		   		email = #{email},
+		   </if>
+		   <if test="psecret != null and psecret != ''">
+		  		psecret = #{psecret},
+		   </if>
+		   <if test="plxnumber != null and plxnumber != ''">
+		   		plxnumber = #{plxnumber},
+		   </if>
+		   <if test="psbtype != null and psbtype != ''">
+		   		psbtype = #{psbtype},
+		   </if>
+		   <if test="ptype != null and ptype != ''">
+		   		ptype = #{ptype},
+		   </if>
+		   <if test="cdorg != null and cdorg != ''">
+		   		cdorg = #{cdorg},
+		   </if>
+		   <if test="sborg != null and sborg != ''">
+		   		sborg = #{sborg},
+		   </if>
+		   <if test="sbdate != null and sbdate != ''">
+		   		sbdate = #{sbdate},
+		   </if>
+		   <if test="gjorg != null and gjorg != ''">
+		   		gjorg = #{gjorg},
+		   </if>
+		   <if test="jsorg != null and jsorg != ''">
+		   		jsorg = #{jsorg},
+		   </if>
+		   <if test="hyorg != null and hyorg != ''">
+		   		hyorg = #{hyorg},
+		   </if>
+		   <if test="tjorg != null and tjorg != ''">
+		   		tjorg = #{tjorg},
+		   </if>
+		   <if test="handleType != null and handleType != ''">
+		   		handleType = #{handleType},
+		   </if>
+		   <if test="handler != null and handler != ''">
+		   		handler = #{handler},
+		   </if>
+		   <if test="curActivityName != null and curActivityName != ''">
+		   		curActivityName = #{curActivityName},
+		   </if>
+		   <if test="handlerlimit != null and handlerlimit != ''">
+		   		handlerlimit = #{handlerlimit},
+		   </if>
+		   <if test="pwtype != null and pwtype != ''">
+		   		pwtype = #{pwtype},
+		   </if>
+		   <if test="isInput != null and isInput != ''">
+		   		isInput = #{isInput}
+		   </if>
+		</trim>
+		where pid = #{pid}
+	</update>
+	
+	<select id="selectProjectById" parameterType="string"
+	 resultType="com.talkweb.ncfw.entity.Project">
+		select t.PID  ,
+			t.PNAME  ,
+			t.PMTYPE ,
+			t.PSTATUS,
+			t.SPSTATUS  ,
+			t.CREATTIME ,
+			t.CREATER,
+			t.PMANAGER  ,
+			t.TEL ,
+			t.EMAIL  ,
+			t.PSECRET,
+			t.PSLNUMBER ,
+			t.PLXNUMBER ,
+			t.PSBTYPE,
+			t.PTYPE  ,
+			t.CDORG  ,
+			t.SBORG  ,
+			t.SBDATE ,
+			t.GJORG  ,
+			t.JSORG  ,
+			t.HYORG  ,
+			t.TJORG  ,
+			t.curActivityName,
+			t.handler ,
+			t.PROPROVINCECODE,
+			t.handleType,
+			t.pwtype,
+			t.isInput
+		from t_project t where PID = #{pid}
+	</select>
+	
+	<!-- query Condition -->
+	<sql id="conditionSql">
+		<if test=" isInput == null or isInput == ''">
+			AND isInput is null
+		</if>
+		<if test=" isInput != null and isInput != ''">
+		
+		</if>
+		<if test=" pname != null and pname != ''">
+			AND pname LIKE CONCAT('%', #{pname}, '%')
+		</if>
+		<if test=" pmtype != null and pmtype != ''">
+			AND pmtype = #{pmtype}
+		</if>
+		<if test=" proprovincecode != null and proprovincecode != ''">
+			AND proprovincecode =  #{proprovincecode}
+		</if>
+		<if test=" dept != null and dept != ''">
+			AND u.citynumber =  #{dept}
+		</if>
+		<if test=" creater != null and creater != ''">
+			AND creater =  #{creater}
+		</if>
+		<if test=" pstatus != null and pstatus != ''">
+			AND pstatus =  #{pstatus}
+		</if>
+		<if test=" spstatus != null and spstatus != ''">
+			AND spstatus =  #{spstatus}
+		</if>
+		<if test=" pstatusNot != null and pstatusNot != ''">
+			AND pstatus !=  #{pstatusNot}
+		</if>
+		<if test="curActivityName != null and curActivityName != ''">
+		   	AND curActivityName = #{curActivityName}
+		   </if>
+		<if test=" pwtype != null and pwtype != ''">
+			AND pwtype =  #{pwtype}
+		</if>
+		<if test=" startDate != null and startDate != '' ">
+			and creattime &gt;= FROM_DAYS(TO_DAYS(#{startDate}))
+		</if>
+		<if test=" endDate != null and endDate != '' ">
+			and creattime &lt; FROM_DAYS(TO_DAYS(#{endDate}) + 1)
+		</if>
+	</sql>
+	
+	<sql id="pendingSql">
+		AND ((handleType = 'ROLE' and handler = #{sproleid}) or (handleType = 'USER' and handler = #{spuserid}))
+		AND handlerlimit = #{pendinglimit}
+	</sql>
+	
+	<select id="queryPendingList" parameterType="hashmap"
+		resultType="com.talkweb.ncfw.entity.Project">
+		<include refid="CommonMapper.pagingStart" />
+		select t.PID,
+		       t.PNAME,
+		       t.pmtype,
+		       t.pstatus,
+		       t.spstatus,
+		       t.creattime,
+		       t.creater,
+		       t.pmanager,
+		       t.curActivityName,
+		       t.proprovincecode,
+		       t.pslnumber
+		  from T_Project t left join t_prizeuser u
+		  on u.userid = t.creater where 1=1
+		<include refid="ProjectMapper.conditionSql" />
+		<include refid="ProjectMapper.pendingSql" />
+		<include refid="CommonMapper.sortInfo"/>
+		<include refid="CommonMapper.pagingEnd" />
+	</select>
+	<select id="getPendingCount" parameterType="hashmap" resultType="Long">
+		SELECT count(*) 
+		from T_Project t left join t_prizeuser u
+		  on u.userid = t.creater where 1=1
+		<include refid="ProjectMapper.conditionSql" />
+		<include refid="ProjectMapper.pendingSql" />
+	</select>
+	
+	<select id="queryAllList" parameterType="hashmap"
+		resultType="com.talkweb.ncfw.entity.Project">
+		<include refid="CommonMapper.pagingStart" />
+		select t.PID,
+		       t.PNAME,
+		       t.pmtype,
+		       t.pstatus,
+		       t.spstatus,
+		       t.creattime,
+		       t.creater,
+		       t.pmanager,
+		       t.curActivityName,
+		       t.proprovincecode,
+		       t.pslnumber
+		 from T_Project t left join t_prizeuser u
+		  on u.userid = t.creater where 1=1
+		<include refid="ProjectMapper.conditionSql" />
+		<include refid="CommonMapper.sortInfo"/>
+		<include refid="CommonMapper.pagingEnd" />
+	</select>
+	<select id="getAllCount" parameterType="hashmap" resultType="Long">
+		SELECT count(*) from T_Project t left join t_prizeuser u
+		  on u.userid = t.creater where 1=1
+		<include refid="ProjectMapper.conditionSql" />
+	</select>
+
+	<select id="queryList" parameterType="hashmap"
+		resultType="com.talkweb.ncfw.entity.Project">
+		select t.PID,
+		       t.PNAME,
+		       t.pmtype,
+		       t.pstatus,
+		       t.spstatus,
+		       t.creattime,
+		       t.creater,
+		       t.pmanager,
+		       t.curActivityName,
+		       t.proprovincecode,
+		       t.pslnumber
+		  from T_Project t left join t_prizeuser u
+		  on u.userid = t.creater where 1=1
+		<include refid="ProjectMapper.conditionSql" />
+		<include refid="CommonMapper.sortInfo"/>
+	</select>
+
+	
+	<update id="updateStatus">
+  		update T_Project set pstatus = #{pstatus}
+  		where pid in
+  		<foreach collection="pidArray" item="pid" open="(" close=")" separator=",">
+  			#{pid}
+  		</foreach>
+  	</update>
+	
+	<delete id="deleteBatch">
+		delete from T_Project where pid in 
+		<foreach collection="array" item="pid" open="(" close=")" separator="," >
+			#{pid}
+		</foreach>
+	</delete>
+	
+	<update id="updatePWType">
+  		update T_Project set pwtype = #{pwtype}
+  		where pid in
+  		<foreach collection="pidArray" item="pid" open="(" close=")" separator=",">
+  			#{pid}
+  		</foreach>
+  	</update>
+	
+	<select id="getCount" parameterType="hashmap" resultType="Long">
+		SELECT count(*) from T_Project t left join t_prizeuser u
+		  on u.userid = t.creater where 1=1
+		<include refid="ProjectMapper.conditionSql" />
+	</select>
+		
+	<select id="searchMaxNum" resultType="java.lang.String" parameterType="java.lang.String">
+		select num from t_project_num where year = #{year}
+	</select>
+	
+	<update id="updateMaxNum" parameterType="java.lang.String">
+		update t_project_num set num = num + 1 where year = #{year}
+	</update>
+	
+</mapper>

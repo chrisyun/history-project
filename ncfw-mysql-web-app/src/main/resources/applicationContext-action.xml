@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<!-- NCFramework组件Action层开始 -->
+	
+	<!-- datadict action -->
+	<bean name="/datadict/dictAction" class="com.talkweb.ncframework.modules.datadict.web.struts2.DictAction" scope="prototype">
+		<property name="dictService" ref="dictService" />
+	</bean>
+	
+	<!-- log action -->
+	<bean name="/log/logAction" class="com.talkweb.ncframework.modules.log.web.struts2.LogAction" scope="prototype">
+		<property name="logService" ref="logService" />
+	</bean>
+	
+	<!-- role action -->
+	<bean name="/rights/roleAction" class="com.talkweb.ncframework.modules.rights.role.rolemanage.web.struts2.RoleAction" scope="prototype">
+		<property name="roleService" ref="roleService" />
+	</bean>
+	
+	<!-- systemMenu action -->
+	<bean name="/rights/systemMenuAction" class="com.talkweb.ncframework.modules.rights.menu.web.struts2.SystemMenuAction" scope="prototype">
+		<property name="systemMenuService" ref="systemMenuService" />
+	</bean>
+	
+	
+	<!-- NCFramework组件Action层结束 -->
+	
+	
+	<!-- Business组件Action层开始 -->
+	
+	<!-- user action -->
+	<bean name="userAction" class="com.talkweb.ncfw.action.UserAction" scope="prototype">
+		<property name="genericDAO" ref="genericDAO" />
+	</bean>
+	
+	<!-- org action -->
+	<bean name="orgAction" class="com.talkweb.ncfw.action.OrgAction" scope="prototype">
+		<property name="genericDAO" ref="genericDAO" />
+	</bean>
+	
+	<bean name="authAction" class="com.talkweb.ncfw.action.AuthAction" scope="prototype">
+		<property name="genericDAO" ref="genericDAO" />
+	</bean>
+	
+	<bean name="jcaptchaAction" class="com.talkweb.security.jcaptcha.JCaptchaAction" scope="prototype">
+		<property name="captchaService" ref="captchaService" />
+	</bean>
+	
+	<!-- report action -->
+	<bean name="namingSqlAction" class="com.talkweb.ncfw.action.NamingSqlAction" scope="prototype">
+		<property name="genericDAO" ref="genericDAO" />
+	</bean>
+	
+	<bean name="fileAction" class="com.talkweb.ncfw.action.FileAction" scope="prototype">
+		<property name="fileService" ref="fileService"/>
+	</bean>
+	
+	<bean name="projectAction" class="com.talkweb.ncfw.action.ProjectAction" scope="prototype">
+		<property name="genericDAO" ref="genericDAO" />
+		<property name="fileService" ref="fileService"/>
+	</bean>
+	
+	<bean name="projectMedAction" class="com.talkweb.ncfw.action.MedProjectAction" scope="prototype">
+		<property name="genericDAO" ref="genericDAO" />
+		<property name="fileService" ref="fileService"/>
+	</bean>
+	
+	<bean name="projectFinAction" class="com.talkweb.ncfw.action.FinProjectAction" scope="prototype">
+		<property name="genericDAO" ref="genericDAO" />
+		<property name="fileService" ref="fileService"/>
+	</bean>
+	
+	<bean name="switchAction" class="com.talkweb.ncfw.action.SwitchAction" scope="prototype">
+		<property name="genericDAO" ref="genericDAO" />
+	</bean>
+	<!-- Business组件Action层结束 -->
+	
+</beans>

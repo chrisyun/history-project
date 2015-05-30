@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>-- Properties --</comment>
+	
+	<!-- JNDI -->
+	<entry key="jndi"></entry>
+	
+	<!-- JDBC -->
+	<entry key="jdbc.url">jdbc:mysql://localhost:3306/thorn?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;autoReconnectForPools=true</entry>
+	<entry key="jdbc.driver">com.mysql.jdbc.Driver</entry> 
+	<!-- <entry key="jdbc.driver">oracle.jdbc.OracleDriver</entry>-->
+	<entry key="jdbc.user">root</entry>
+	<entry key="jdbc.password">root</entry>
+	<!-- 每60*60秒(1小时)，检查连接池中的空闲连接 --> 
+	<entry key="c3p0.idleConnectionTestPeriod">3600</entry>
+</properties>

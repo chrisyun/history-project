@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ReseverMapper">
+
+	<resultMap id="BaseResultMap" type="com.parrot.app.entity.Resever">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="BULIDTIME" property="buildTime" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+		<result column="USERID" property="userId" jdbcType="VARCHAR" />
+		<result column="USERNAME" property="userName" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="REPLYTIME" property="replyTime" jdbcType="VARCHAR" />
+		<result column="SERNO" property="serNo" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		R.ID,R.NAME,R.BULIDTIME,R.AREA,R.USERID,U.USERNAME,R.PROVINCE,R.REPLYTIME,R.SERNO
+  	</sql>
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="name != null and name != ''">
+				and R.NAME like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+      		</if>
+      		<if test="userName != null and userName != ''">
+				and U.USERNAME like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+      		</if>
+			<if test="id != null">
+				AND R.ID = #{id,jdbcType=DECIMAL}
+      		</if>
+      		<if test="province != null and province != ''">
+				AND R.PROVINCE = #{province,jdbcType=VARCHAR}
+      		</if>
+      		<if test="userId != null and userId != ''">
+				AND R.USERID = #{userId,jdbcType=VARCHAR}
+      		</if>
+		</where>
+	</sql>
+
+	<insert id="insert" parameterType="com.parrot.app.entity.Resever">
+		insert into T_RESERVE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">NAME,</if>
+			<if test="buildTime != null and buildTime != ''">BULIDTIME,</if>
+			<if test="area != null and area != ''">AREA,</if>
+			<if test="userId != null and userId != ''">USERID,</if>
+			<if test="province != null and province != ''">PROVINCE,</if>
+			<if test="replyTime != null and replyTime != ''">REPLYTIME,</if>
+			<if test="serNo != null">SERNO,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">#{name,jdbcType=VARCHAR},</if>
+			<if test="buildTime != null and buildTime != ''">#{buildTime,jdbcType=VARCHAR},</if>
+			<if test="area != null and area != ''">#{area,jdbcType=VARCHAR},</if>
+			<if test="userId != null and userId != ''">#{userId,jdbcType=VARCHAR},</if>
+			<if test="province != null and province != ''">#{province,jdbcType=VARCHAR},</if>
+			<if test="replyTime != null and replyTime != ''">#{replyTime,jdbcType=VARCHAR},</if>
+			<if test="serNo != null">#{serNo,jdbcType=DECIMAL},</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="com.parrot.app.entity.Resever">
+		update T_RESERVE
+		<set>
+			<if test="name != null and name != ''">NAME = #{name,jdbcType=VARCHAR},</if>
+			<if test="buildTime != null and buildTime != ''">BULIDTIME = #{buildTime,jdbcType=VARCHAR},</if>
+			<if test="area != null and area != ''">AREA = #{area,jdbcType=VARCHAR},</if>
+			<if test="userId != null and userId != ''">USERID = #{userId,jdbcType=VARCHAR},</if>
+			<if test="province != null and province != ''">PROVINCE = #{province,jdbcType=VARCHAR},</if>
+			<if test="replyTime != null and replyTime != ''">REPLYTIME = #{replyTime,jdbcType=VARCHAR},</if>
+			<if test="serNo != null">SERNO = #{serNo,jdbcType=DECIMAL},</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+	<delete id="delete">
+		delete from T_RESERVE where ID in
+		<foreach collection="list" item="item" open="(" close=")"
+			separator=",">
+			#{item,jdbcType=DECIMAL}
+		</foreach>
+	</delete>
+	
+	<select id="selectPage" parameterType="hashmap"
+		resultMap="BaseResultMap">
+		<include refid="MySQLCommonMapper.pagingStart"/>
+		select
+		<include refid="Base_Column_List" />
+		from T_RESERVE R left join T_SYS_USER U on R.USERID = U.USERID 
+		<include refid="Where_Clause" />
+		<include refid="MySQLCommonMapper.sortInfo"/>
+		<include refid="MySQLCommonMapper.pagingEnd"/>
+	</select>
+	<select id="selectPageCount" parameterType="hashmap"
+		resultType="long">
+		select count(*) from T_RESERVE R left join T_SYS_USER U on R.USERID = U.USERID 
+		<include refid="Where_Clause" />
+	</select>
+
+</mapper>

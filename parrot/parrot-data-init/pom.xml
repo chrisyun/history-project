@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>Thorn-birds</artifactId>
+		<groupId>org.thorn</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>org.thorn</groupId>
+	<artifactId>parrot-data-init</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>parrot-data</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.thorn</groupId>
+			<artifactId>parrot</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>1.2_04</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.openejb</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>5.0-1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>1.2_04</version>
+		</dependency>
+
+	</dependencies>
+
+
+</project>

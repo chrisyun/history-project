@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<!-- User Mappper -->
+	<mapper namespace="OrgMapper">
+		<!-- query User Condition -->
+		<sql id="conditionSql">
+			<where>
+				<if test=" orgid != null and orgid != '' ">
+					AND orgid = #{orgid}
+				</if>
+				<if test=" orgname != null and orgname != '' ">
+					AND orgname LIKE CONCAT('%', #{orgname}, '%')
+				</if>
+				<if test=" orglevel != null and orglevel != '' ">
+					AND orglevel = #{orglevel}
+				</if>
+				<if test=" orgtype != null and orgtype != '' ">
+					AND orgtype = #{orgtype}
+				</if>
+				<if test=" provinceNumber != null and provinceNumber != '' ">
+					AND provinceNumber = #{provinceNumber}
+				</if>
+				<if test=" parentorg != null and parentorg != '' ">
+					AND parentorg = #{parentorg}
+				</if>
+				<if test=" isshow != null and isshow != '' ">
+					AND isshow = #{isshow}
+				</if>
+				<if test=" notIn != null and notIn != '' ">
+					AND orgid not in (9,38,39)
+				</if>
+			</where>
+		</sql>
+		
+		<sql id="columnSql">
+			orgid,orgname,orglevel,orgtype,provinceNumber,parentorg,sort,isshow,orgsbname
+		</sql>
+		
+		
+		<!-- query User -->
+		<select id="query" parameterType="hashmap" resultType="com.talkweb.ncfw.entity.Org">
+			select
+			<include refid="OrgMapper.columnSql"/>
+		  	from t_prizeorg
+			<include refid="OrgMapper.conditionSql"/>
+			<include refid="CommonMapper.sortInfo"/>
+		</select>
+		
+		<!-- query User support pagination -->
+		<select id="querySupportPagination" parameterType="hashmap" resultType="com.talkweb.ncfw.entity.Org">
+			<include refid="CommonMapper.pagingStart"/>
+			select
+			<include refid="OrgMapper.columnSql"/>
+		  	from t_prizeorg
+			<include refid="OrgMapper.conditionSql"/>
+			<include refid="CommonMapper.sortInfo"/>
+			<include refid="CommonMapper.pagingEnd"/>
+		</select>
+		
+		<!-- get User Count -->
+		<select id="getCount" parameterType="hashmap" resultType="Long">
+			SELECT  count(*)
+			FROM t_prizeorg
+			<include refid="OrgMapper.conditionSql"/>
+		</select>
+		
+		<insert id="insert">
+			INSERT INTO t_prizeorg (
+			<if test="orgname != null and orgname != ''">
+				orgname
+			</if>
+			<if test="orglevel != null and orglevel != ''">
+				,orglevel
+			</if>
+			<if test="orgtype != null and orgtype != ''">
+				,orgtype
+			</if>
+			<if test="provinceNumber != null and provinceNumber != ''">
+				,provinceNumber
+			</if>
+			,parentorg
+			<if test="sort != null and sort != ''">
+				,sort
+			</if>
+			<if test="isshow != null and isshow != ''">
+				,isshow
+			</if>
+			<if test="orgsbname != null and orgsbname != ''">
+				,orgsbname
+			</if>
+		) VALUES (
+			<if test="orgname != null and orgname != ''">
+				#{orgname}
+			</if>
+			<if test="orglevel != null and orglevel != ''">
+				,#{orglevel}
+			</if>
+			<if test="orgtype != null and orgtype != ''">
+				,#{orgtype}
+			</if>
+			<if test="provinceNumber != null and provinceNumber != ''">
+				,#{provinceNumber}
+			</if>
+			,#{parentorg}
+			<if test="sort != null and sort != ''">
+				,#{sort}
+			</if>
+			<if test="isshow != null and isshow != ''">
+				,#{isshow}
+			</if>
+			<if test="orgsbname != null and orgsbname != ''">
+				,#{orgsbname}
+			</if>
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_prizeorg 
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="orgname != null">
+				orgname = #{orgname},
+			</if>
+			<if test="orglevel != null">
+				orglevel = #{orglevel},
+			</if>
+			<if test="orgtype != null">
+				orgtype = #{orgtype},
+			</if>
+			<if test="provinceNumber != null">
+				provinceNumber = #{provinceNumber},
+			</if>
+			<if test="parentorg != null">
+				parentorg = #{parentorg},
+			</if>
+			<if test="sort != null">
+				sort = #{sort},
+			</if>
+			<if test="isshow != null">
+				isshow = #{isshow},
+			</if>
+			<if test="orgsbname != null">
+				orgsbname = #{orgsbname},
+			</if>
+	    </trim>
+		WHERE orgid = #{orgid}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_prizeorg where orgid = #{orgid} or parentorg = #{orgid}
+	</delete>
+		
+</mapper>

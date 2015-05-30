@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>-- Properties --</comment>
+	<entry key="mail.user">xingbo@mcprc.gov.cn</entry>
+	<entry key="mail.smtp">mail.mcprc.gov.cn</entry> 
+	<entry key="mail.port">22</entry>
+	<entry key="mail.password">xingbo1981</entry>
+	<entry key="mail.email">xingbo@mcprc.gov.cn</entry>
+	<entry key="mail.name">非物质文化遗产项目管理平台</entry>
+</properties>
